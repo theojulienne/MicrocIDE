@@ -51,7 +51,6 @@ public class FilenameDialog extends Dialog {
 	    shell.setDefaultButton( okButton );
 	    okButton.addSelectionListener( new SelectionListener( ) {
 			public void widgetDefaultSelected( SelectionEvent e ) {
-				// TODO Auto-generated method stub	
 			}
 			public void widgetSelected( SelectionEvent e ) {
 				ok( );
@@ -66,7 +65,6 @@ public class FilenameDialog extends Dialog {
 	    canButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 	    canButton.addSelectionListener( new SelectionListener( ) {
 			public void widgetDefaultSelected( SelectionEvent e ) {
-				// TODO Auto-generated method stub	
 			}
 			public void widgetSelected( SelectionEvent e ) {
 				cancel( );

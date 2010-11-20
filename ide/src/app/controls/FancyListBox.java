@@ -1,8 +1,5 @@
 package app.controls;
 
-// TODO: http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/editthetextofaSWTtableiteminplace.htm
-
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;

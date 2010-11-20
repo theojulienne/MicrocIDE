@@ -116,8 +116,19 @@ public class SerialTerminalTab extends CTabItem {
 		baud.setText( "Baud Rate" );
 		*/
 		
+        Button localEchoButton = new Button( container, SWT.CHECK );
+        localEchoButton.setText( "Local Echo" );
+        localEchoButton.addSelectionListener( new SelectionListener() {			
+			public void widgetSelected(SelectionEvent evt) {
+				Button echoButton = (Button)evt.widget;
+				console.setLocalEcho( echoButton.getSelection() );
+			}
+			public void widgetDefaultSelected(SelectionEvent evt) {
+			}
+		} );
+        
 		Label spacer = new Label( container, SWT.NONE );
-		GridData spacerGridData = new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 );
+		GridData spacerGridData = new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 );
 		spacer.setLayoutData( spacerGridData );
 		
 		disconnectDeploy = new Button( container, SWT.CHECK );
@@ -145,8 +156,6 @@ public class SerialTerminalTab extends CTabItem {
 			}
 			
 		} );
-		
-		// TODO: disconnect during deployment option
 		
 		this.setControl( container );
 		

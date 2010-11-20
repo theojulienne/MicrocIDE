@@ -1,5 +1,6 @@
 package app.project.navigation;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
@@ -84,13 +85,10 @@ public class MenuBar {
 	}
 	
 	private void about( ) {
-		// TODO: launch about window
-
-		System.out.println( "ABOUT" );
+		MessageDialog.openInformation( projectWindow.getDisplay().getActiveShell(), "About", Application.aboutString );
 	}
 	
 	private void preferences( ) {
-		// TODO: launch preference pane
 		Application.getInstance().showPreferences( );
 	}
 	

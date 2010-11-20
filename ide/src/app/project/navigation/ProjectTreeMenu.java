@@ -363,7 +363,7 @@ public class ProjectTreeMenu {
 			try {
 				newFile.createNewFile( );
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				MessageDialog.openError( widgetArea.getShell( ), "Error", "Unable to create file" );
 				e.printStackTrace();
 			}
 		}
@@ -437,7 +437,7 @@ public class ProjectTreeMenu {
 			e.widget = treeView;
 			e.data = file;
 			openListener.handleEvent( e );
-			System.out.println( "done opening file" );
+			//System.out.println( "done opening file" );
 		}
 	}
 	

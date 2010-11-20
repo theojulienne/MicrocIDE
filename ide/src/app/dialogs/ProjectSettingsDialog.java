@@ -1,12 +1,11 @@
 package app.dialogs;
 
-// TODO Save and add Preset
+// TODO Add Presets
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseEvent;
@@ -23,7 +22,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,9 +37,19 @@ public class ProjectSettingsDialog extends Dialog {
 	private FancyListBox buildList;
 	private FancyListBox deployList;
 	private JSONObject presets;
+	private JSONObject commands;
+	private File projectFile;
 	  
 	public ProjectSettingsDialog( Shell parentShell, File projectPath ) {
 		super( parentShell, SWT.DIALOG_TRIM | SWT.RESIZE );
+		try {
+			projectFile = new File( projectPath, Application.projectFileName );
+			String jsonText = FileIO.readFile( projectFile );
+			commands = new JSONObject( jsonText ).getJSONObject( "commands" );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			commands = null;
+		}
 	}
 	
 	protected void createContents( ) {
@@ -61,6 +69,7 @@ public class ProjectSettingsDialog extends Dialog {
 
 		
 		try {
+			// global project settings, presets, etc.
 			File settingsFile = new File( Application.projectSettingsFile );
 			JSONObject globalSettings = new JSONObject( FileIO.readFile( settingsFile ) );
 			presets = globalSettings.getJSONObject( "presets" );
@@ -119,33 +128,84 @@ public class ProjectSettingsDialog extends Dialog {
 		
 		buildList = new FancyListBox( commandsArea, SWT.NONE );
 		buildList.setLayoutData( textData );
-		/*
-		buildText = new Text( commandsArea, SWT.BORDER | SWT.SINGLE );
-		buildText.setLayoutData( textData );
-		*/
+		
 
 		new Label( commandsArea, SWT.LEFT ).setText( "Deploy Commands:" );
 		
 
 		deployList = new FancyListBox( commandsArea, SWT.NONE );
 		deployList.setLayoutData( textData );
+
 		/*
-		deployText = new Text( commandsArea, SWT.BORDER | SWT.SINGLE );
-		deployText.setLayoutData( textData );
-		*/
-		
 		Button addPresetButton = new Button( commandsArea, SWT.PUSH );
 		addPresetButton.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, false, false ) );
 		addPresetButton.setText( "Add as Preset" );
-		
+		*/
 		new Label( commandsArea, SWT.NONE ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true )  );
 		
 		Button saveButton = new Button( commandsArea, SWT.PUSH );
 		saveButton.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, false, false ) );
 		saveButton.setText( "Save Settings" );
+		saveButton.addSelectionListener( new SelectionListener() {
+			public void widgetSelected( SelectionEvent evt ) {
+				saveSettings( );
+			}
+			public void widgetDefaultSelected( SelectionEvent evt ) {
+			}
+		} );
 		
+		loadSettings( );
 	}
 	
+	private void loadSettings( ) {
+		boolean requiresNewFile = false;
+		
+		if ( commands == null ) {
+			requiresNewFile = true;
+		} else {
+			try {
+				JSONArray buildCmds = commands.getJSONArray( "Build" );
+				JSONArray deployCmds = commands.getJSONArray( "Deploy" );
+			
+				// populate lists
+				for ( int i = 0; i < buildCmds.length(); i++ ) {
+					buildList.add( buildCmds.getString( i ) );
+				}
+				
+				for ( int i = 0; i < buildCmds.length(); i++ ) {
+					deployList.add( deployCmds.getString( i ) );
+				}
+			} catch ( JSONException e ) {
+				requiresNewFile = true;
+			}
+		}
+		
+		if ( requiresNewFile ) {
+			boolean continueLoad = MessageDialog.openConfirm( shell, "Unexpected Format", "The project's settings file is unreadable or in an unexpected format.\nContinue with empty settings?" );
+			
+			if ( !continueLoad ) {
+				shell.close( );
+			}
+		}
+	}
+	
+	private void saveSettings( ) {
+		try {
+			JSONObject newSettings = new JSONObject( );
+			JSONObject commands  = new JSONObject( );
+			JSONArray buildCmds = new JSONArray( buildList.getItems() );
+			JSONArray deployCmds = new JSONArray( deployList.getItems() );
+			
+			commands.put( "Build", buildCmds );
+			commands.put( "Deploy", deployCmds );
+			newSettings.put( "commands", commands );
+			FileIO.writeFile( newSettings.toString( 3 ), projectFile );
+			shell.close( );
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	private void createShell( ) {
 	    shell = new Shell( getParent( ), getStyle( ) );
@@ -156,6 +216,7 @@ public class ProjectSettingsDialog extends Dialog {
 	}
 	
 	public void open( ) {
+		
 		if ( shell == null || shell.isDisposed() ) {
 			createShell( );
 		}

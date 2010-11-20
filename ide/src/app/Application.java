@@ -3,6 +3,7 @@ package app;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -16,6 +17,9 @@ public class Application {
 	
 	private static final String prefFile = "ide.properties";
 
+	public static String appName = "FloobWozzle";
+	public static String version = "0.1 Alpha Release";
+	public static String aboutString = appName + " " + version + "\n" + "IDE for embedded development\n2010 Icy Labs http://www.icy.com.au/";
 	public static String projectFileName = "project.settings";
 	public static String projectSettingsFile = "project_settings.json";
 	
@@ -76,8 +80,8 @@ public class Application {
 			prefHandle.createNewFile( );
 			preferences.load( );
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			MessageDialog.openError( display.getActiveShell(), "Error", "Unable to load preferences" );
 		}
 		
 		preferences.setDefault( "syntax.keyword.r", 20 );
@@ -163,8 +167,8 @@ public class Application {
 		try {
 			preferences.save( );
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			MessageDialog.openError( display.getActiveShell(), "Error", "Unable to save preferences" );
 		}
 		
 		instance = this;
@@ -201,7 +205,6 @@ public class Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String appName = "FloobWozzle";
 		// Q: Why is the app called FloobWozzle?
 		// A: It went a little like... 
 		//    "Hey Mitch, what should I call this IDE?" 

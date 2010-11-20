@@ -1,7 +1,6 @@
 package app.project;
 
 import java.io.File;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -53,8 +52,6 @@ import app.toolTabs.SerialTerminalTab;
 public class ProjectWindow {
 	private static final int BUILD  = 1;
 	private static final int DEPLOY = 2;
-	
-	private static String projectFileTemplate = "{\n    \"commands\" : {\n        \"Build\": \"\",\n        \"\": \"\"\n    }\n}";
 	
 	private Shell shell;
 	private CTabFolder docTabs;
@@ -382,27 +379,8 @@ public class ProjectWindow {
 	}
 	
 	public void openProjectSettings( File projectPath ) {
-		File settingsFile = new File( projectPath, Application.projectFileName );
-		try {
-			
-			if ( !settingsFile.exists() ) {
-				if ( settingsFile.createNewFile( ) ) {
-			
-					FileIO.writeFile( projectFileTemplate, settingsFile );
-				
-				} else {
-					MessageDialog.openError( shell, "Unable to Create New Project", "Unable to create a new project." );
-					return;
-				}
-			}
-			
-			ProjectSettingsDialog settingsDialog = new ProjectSettingsDialog( shell, projectPath );
-			settingsDialog.open( );
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			MessageDialog.openError( shell, "Unable to Create New Project", "Unable to create a new project." );
-		}
+		ProjectSettingsDialog settingsDialog = new ProjectSettingsDialog( shell, projectPath );
+		settingsDialog.open( );
 	}
 	
 	public void find( ) {
@@ -441,6 +419,15 @@ public class ProjectWindow {
 	
 	public void openDocument( File fileToOpen ) {
 		DocumentTab tab;
+		if ( fileToOpen.getName().equals( Application.projectFileName ) ) {
+			
+			boolean openPrefs = MessageDialog.openQuestion( shell, "Opening Settings", "This is a project settings file.\nDo you want to open the settings dialog instead?" );
+			if ( openPrefs ) {
+				openProjectSettings( fileToOpen.getParentFile() );
+				return;
+			}
+		}
+		
 		
 		if ( documents.containsKey( fileToOpen ) ) {
 			tab = documents.get( fileToOpen );
@@ -622,7 +609,6 @@ public class ProjectWindow {
 			try {
 				jsonSettings = new JSONObject( settings );
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				jsonSettings = null;
 			}
@@ -641,23 +627,16 @@ public class ProjectWindow {
 
 		shell.addShellListener( new ShellListener( ) {
 			public void shellActivated(ShellEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			public void shellClosed(ShellEvent e) {
 				e.doit = canQuit( );
 			}
 			public void shellDeactivated(ShellEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			public void shellDeiconified(ShellEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			public void shellIconified(ShellEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		

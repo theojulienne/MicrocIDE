@@ -42,7 +42,7 @@ public class FindReplaceDialog extends Dialog {
   public static int FIND_PREV = 1;
   public static int REPLACE = 2;
   public static int REPLACE_FIND_NEXT = 3;
-  public static int REPLACE_ALL = 4; // TODO
+  public static int REPLACE_ALL = 4;
   
   private Shell shell;
 

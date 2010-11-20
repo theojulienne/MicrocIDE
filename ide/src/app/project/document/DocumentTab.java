@@ -30,11 +30,6 @@ import app.project.ProjectWindow;
 
 import syntax.c.CSourceViewerConfiguration;
 
-
-// TODO: 
-//  * support file renaming (externally and internally)
-//  * Find/Replace
-
 public class DocumentTab extends CTabItem {
 
 	private SourceViewer sourceView;
@@ -125,7 +120,6 @@ public class DocumentTab extends CTabItem {
 				
 			}
 			public void focusLost(FocusEvent e) {
-				// TODO Auto-generated method stub
 				enableMenuBar( false );
 			}
 		} );
@@ -302,27 +296,12 @@ public class DocumentTab extends CTabItem {
 	}
 	
 	private void promptFileChanged( ) {
-		// TODO
-		
 		parent.setSelection( this );
 		boolean canUpdate = MessageDialog.openConfirm( parent.getShell( ), "File Changed", "This file has been changed externally.\nUpdate this file to the new version?\n(This will lose unsaved changes)" );
 		
 		if ( canUpdate ) {
 			updateFile( );
 		}
-		
-		/*
-		MessageBox messageBox = new MessageBox( parent.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-		messageBox.setText( "File Changed" );
-		messageBox.setMessage( "This file has been changed externally.\nUpdate this file to the new version?\n(This will lose unsaved changes)" );
-		
-		int buttonID = messageBox.open();
-		
-		if ( buttonID == SWT.YES ) {
-			updateFile( );
-        }
-        */
-		
 	}
 
 	public void checkFileValidity() {
