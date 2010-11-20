@@ -17,10 +17,15 @@ public class FilenameDialog extends Dialog {
 	private Shell shell;
 	Text filenameText;
 	boolean cancelled;
-	private String savedText;
+	private String savedText = "";
 	
 	public FilenameDialog( Shell parent ) {
 		super( parent, SWT.DIALOG_TRIM | SWT.MODELESS );
+	}
+	
+	public FilenameDialog( Shell parent, String initialText ) {
+		super( parent, SWT.DIALOG_TRIM | SWT.MODELESS );
+		savedText = initialText;
 	}
 
 	protected void createContents( ) {
@@ -35,6 +40,7 @@ public class FilenameDialog extends Dialog {
 		filenameText = new Text( text, SWT.BORDER );
 		GridData data = new GridData( GridData.FILL_HORIZONTAL );
 		filenameText.setLayoutData( data );
+		filenameText.setText( savedText );
 
 	    Composite buttons = new Composite( shell, SWT.NONE );
 	    buttons.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );

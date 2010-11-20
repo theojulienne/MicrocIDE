@@ -349,6 +349,8 @@ public class ProjectTreeMenu {
 		if ( isConfirmed ) {
 			file.delete();
 		}
+		
+		update( );
 	}
 	
 	private void createFile( File parent ) {
@@ -382,7 +384,7 @@ public class ProjectTreeMenu {
 		}
 		
 		
-		FilenameDialog fnDialog = new FilenameDialog( shell );
+		FilenameDialog fnDialog = new FilenameDialog( shell, file.getName() );
 		String newName = fnDialog.open();
 		File newFile = new File( file.getParentFile(), newName );
 		

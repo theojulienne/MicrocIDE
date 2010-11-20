@@ -470,8 +470,10 @@ public class ProjectWindow {
 	
 	public void renameDocument( File file, File newFile ) {
 		DocumentTab tab = documents.remove( file );
-		tab.rename( newFile );
-		documents.put( newFile, tab );
+		if ( tab != null ) {
+			tab.rename( newFile );
+			documents.put( newFile, tab );
+		}
 	}
 
 	

@@ -181,11 +181,7 @@ public class ProjectSettingsDialog extends Dialog {
 		}
 		
 		if ( requiresNewFile ) {
-			boolean continueLoad = MessageDialog.openConfirm( shell, "Unexpected Format", "The project's settings file is unreadable or in an unexpected format.\nContinue with empty settings?" );
-			
-			if ( !continueLoad ) {
-				shell.close( );
-			}
+			// Nothing, just displays as blank info
 		}
 	}
 	
