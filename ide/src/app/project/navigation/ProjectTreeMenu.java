@@ -136,7 +136,7 @@ public class ProjectTreeMenu {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 			public void widgetSelected(SelectionEvent e) {
-				createDir( );
+				createDir( getSelectedDir() );
 			}
 		} );
 		
@@ -258,19 +258,6 @@ public class ProjectTreeMenu {
 		return parent;
 	}
 	
-	private void createDir( ) {
-		File parent = getSelectedDir( );
-
-		if ( parent != null ) {
-			FilenameDialog fnDialog = new FilenameDialog( widgetArea.getShell( ) );
-			String newFilename = fnDialog.open( );
-			File newFile = new File( parent, newFilename );
-			newFile.mkdir( );
-		}
-		
-		update( );
-	}
-	
 	
 	// Create Popup Menu
 	private void createPopupMenu( ) {
@@ -319,6 +306,16 @@ public class ProjectTreeMenu {
 			} 
 		} );
 		
+		MenuItem newFolder = new MenuItem( menu, SWT.PUSH );
+		newFolder.setText( "Create new folder" );
+		newFolder.addSelectionListener( new SelectionListener( ) {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				createDir( getSelectedDir( ) );
+			} 
+		} );
+		
 		MenuItem delFile = new MenuItem( menu, SWT.PUSH );
 		delFile.setText( "Delete file" );
 		delFile.addSelectionListener( new SelectionListener( ) {
@@ -347,7 +344,26 @@ public class ProjectTreeMenu {
 		boolean isConfirmed = MessageDialog.openConfirm( shell, "Confirm Deletion",
 				"Are you sure you want to delete the file " + file.getName() + "? This action cannot be undone." );
 		if ( isConfirmed ) {
-			file.delete();
+			if ( !file.delete() ) {
+				MessageDialog.openError( shell, "Unable to delete", "Unable to delete " + file.getName( ) );
+			}
+		}
+		
+		update( );
+	}
+	
+	private void createDir( File parent ) {
+		if ( parent == null ) {
+			parent = project.getPath( );
+		}
+		
+		if ( parent != null ) {
+			FilenameDialog fnDialog = new FilenameDialog( widgetArea.getShell( ) );
+			String newFilename = fnDialog.open( );
+			File newFile = new File( parent, newFilename );
+			if ( !newFile.mkdir( ) ) {
+				MessageDialog.openError( widgetArea.getShell( ), "Error", "Unable to create folder" );
+			}
 		}
 		
 		update( );

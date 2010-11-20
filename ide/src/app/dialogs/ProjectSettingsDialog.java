@@ -5,7 +5,6 @@ package app.dialogs;
 import java.io.File;
 import java.util.Iterator;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseEvent;
