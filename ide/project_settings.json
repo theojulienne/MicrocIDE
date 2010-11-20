@@ -1,0 +1,22 @@
+{
+	"presets": {
+		"Penguino AVR": {
+			"Build": [
+				"avr-gcc -Wall -Os -DF_CPU=16000000 -mmcu=atmega32 -std=gnu99 -o firmware.elf *.c"
+			],
+			"Deploy": [
+				"avr-gcc -Wall -Os -DF_CPU=16000000 -mmcu=atmega32 -std=gnu99 -o firmware.elf *.c",
+				"avr-objcopy -j .text -j .data -O binary firmware.elf firmware.elf",
+				"flip firmware.elf"
+			]
+		},
+		"Arduino": {
+			"Build": [
+				"something"
+			],
+			"Deploy": [
+				"something else"
+			]
+		}
+	}
+}

@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -530,9 +531,14 @@ public class ProjectWindow {
 		
 		if ( settings != null ) {
 			try {
-				String buildCmd = settings.getJSONObject( "commands" ).getString( "Build" );
+				JSONArray cmds = settings.getJSONObject( "commands" ).getJSONArray( "Build" );
+				
+				ArrayList<String> commands = new ArrayList<String>( );
+				for ( int i = 0; i < cmds.length(); i++ ) {
+					commands.add( cmds.getString(i) );
+				}
 
-				buildRunner = new CmdRunner( buildCmd, buildConsole, this, BUILD );
+				buildRunner = new CmdRunner( commands, buildConsole, this, BUILD );
 				buildRunner.setActionName( "Building" );
 				projectMenu.getBuildButton().setImage( images.get( "stop" ) );
 				projectMenu.getBuildButton().setData( true );
@@ -555,9 +561,14 @@ public class ProjectWindow {
 		
 		if ( settings != null ) {
 			try {
-				String deployCmd = settings.getJSONObject( "commands" ).getString( "Deploy" );
+				JSONArray cmds = settings.getJSONObject( "commands" ).getJSONArray( "Deploy" );
+				
+				ArrayList<String> commands = new ArrayList<String>( );
+				for ( int i = 0; i < cmds.length(); i++ ) {
+					commands.add( cmds.getString(i) );
+				}
 
-				deployRunner = new CmdRunner( deployCmd, buildConsole, this, DEPLOY );
+				deployRunner = new CmdRunner( commands, buildConsole, this, DEPLOY );
 				deployRunner.setActionName( "Deploying" );
 				projectMenu.getDeployButton().setImage( images.get( "stop" ) );
 				projectMenu.getDeployButton().setData( true );

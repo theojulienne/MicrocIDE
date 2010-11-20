@@ -1,5 +1,6 @@
 package app.toolTabs;
 
+// TODO: local echo
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;

@@ -17,6 +17,7 @@ public class Application {
 	private static final String prefFile = "ide.properties";
 
 	public static String projectFileName = "project.settings";
+	public static String projectSettingsFile = "project_settings.json";
 	
 	private static Application instance = null;
 	
