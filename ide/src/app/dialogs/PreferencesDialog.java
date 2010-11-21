@@ -137,7 +137,7 @@ public class PreferencesDialog extends Dialog {
 		
 		new Label( fontsArea, SWT.NONE ).setLayoutData( vSpacer );
 		
-		new Label( fontsArea, SWT.LEFT ).setText( "Changes to fonts will take effect on the next launch of the program." );
+		new Label( fontsArea, SWT.LEFT ).setText( "Changes to fonts will take effect the next time a document tab is opened." );
 		
 		new Label( shell, SWT.NONE ).setLayoutData( hSpacer );
 		
@@ -150,6 +150,7 @@ public class PreferencesDialog extends Dialog {
 				prefs.setFont( "console", sampleConsoleFont.getFont().getFontData()[0] );
 				prefs.setFont( "source", sampleSourceFont.getFont().getFontData()[0] );
 				prefs.save( );
+				shell.close( );
 			}
 		} );
 		
