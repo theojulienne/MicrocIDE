@@ -21,6 +21,7 @@ public class CSourceViewerConfiguration extends SourceViewerConfiguration {
 		// TODO: set a repairer and damager for each partition (e.g. multi-line comments)
 		pr.setRepairer(ddr, IDocument.DEFAULT_CONTENT_TYPE);
 		pr.setDamager(ddr, IDocument.DEFAULT_CONTENT_TYPE);
+		
 		return pr;
 	}
 	 
