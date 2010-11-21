@@ -148,12 +148,6 @@ public class Preferences {
 		preferences.setDefault( "syntax.typemod.g", 100 );
 		preferences.setDefault( "syntax.typemod.b", 255 );
 		
-		preferences.setDefault( "syntax.directive.r", 0 );
-		preferences.setDefault( "syntax.directive.g", 84 );
-		preferences.setDefault( "syntax.directive.b", 0 );
-		
-		preferences.setDefault( "syntax.directive.font", SWT.BOLD );
-		
 		preferences.setDefault( "syntax.comment.r", 128 );
 		preferences.setDefault( "syntax.comment.g", 128 );
 		preferences.setDefault( "syntax.comment.b", 128 );
@@ -187,6 +181,25 @@ public class Preferences {
 		preferences.setDefault( "syntax.grouping.r", 64 );
 		preferences.setDefault( "syntax.grouping.g", 128 );
 		preferences.setDefault( "syntax.grouping.b", 64 );
+		
+
+		preferences.setDefault( "syntax.directive.r", 0 );
+		preferences.setDefault( "syntax.directive.g", 84 );
+		preferences.setDefault( "syntax.directive.b", 0 );
+		
+		preferences.setDefault( "syntax.directive.font", SWT.BOLD );
+		
+		preferences.setDefault( "syntax.directivestring.r", 64 );
+		preferences.setDefault( "syntax.directivestring.g", 128 );
+		preferences.setDefault( "syntax.directivestring.b", 64 );
+		
+		preferences.setDefault( "syntax.directiveangles.r", 32 );
+		preferences.setDefault( "syntax.directiveangles.g", 128 );
+		preferences.setDefault( "syntax.directiveangles.b", 32 );
+		
+		preferences.setDefault( "syntax.directivedefault.r", 64 );
+		preferences.setDefault( "syntax.directivedefault.g", 84 );
+		preferences.setDefault( "syntax.directivedefault.b", 64 );
 		
 		preferences.setDefault( "syntax.default.r", 0 );
 		preferences.setDefault( "syntax.default.g", 0 );

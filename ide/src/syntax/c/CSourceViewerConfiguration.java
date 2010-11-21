@@ -20,10 +20,14 @@ public class CSourceViewerConfiguration extends SourceViewerConfiguration {
 		DefaultDamagerRepairer ddr = new DefaultDamagerRepairer( new CCommentBlockScanner() );
 	    pr.setDamager( ddr, CPartitionScanner.C_MULTILINE_COMMENT );
 	    pr.setRepairer( ddr, CPartitionScanner.C_MULTILINE_COMMENT );
-	    
+
 		ddr = new DefaultDamagerRepairer( new CDocCommentScanner() );
 	    pr.setDamager( ddr, CPartitionScanner.C_DOCUMENTATION_COMMENT );
 	    pr.setRepairer( ddr, CPartitionScanner.C_DOCUMENTATION_COMMENT );
+
+		ddr = new DefaultDamagerRepairer( new CDirectiveScanner() );
+	    pr.setDamager( ddr, CPartitionScanner.C_COMPILER_DIRECTIVE );
+	    pr.setRepairer( ddr, CPartitionScanner.C_COMPILER_DIRECTIVE );
 	    
 		ddr = new DefaultDamagerRepairer( new CScanner() );
 		pr.setRepairer(ddr, IDocument.DEFAULT_CONTENT_TYPE);

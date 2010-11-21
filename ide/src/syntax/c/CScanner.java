@@ -23,6 +23,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 	       }
 	    } );
 		
+		/*
 		CustomWordRule directiveRule = new CustomWordRule( new IWordDetector() {	       
 			public boolean isWordStart(char c) { 
 				return (c == '#'); 
@@ -31,6 +32,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 				return (Character.isLetter(c)); 
 			}
 		} );
+		*/
 		
 		CustomWordRule operatorRule = new CustomWordRule( new IWordDetector() {
 			public boolean isWordStart(char c) { 
@@ -45,7 +47,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 		Token keywordTok   = getTokenForPreference( "keyword" );
 		Token primTok      = getTokenForPreference( "primtype" );
 		Token capTok       = getTokenForPreference( "allcaps" );
-		Token directiveTok = getTokenForPreference( "directive" );
+		//Token directiveTok = getTokenForPreference( "directive" );
 		Token tymodTok     = getTokenForPreference( "typemod" );
 	    Token commentTok   = getTokenForPreference( "comment" );
 	    Token stringTok    = getTokenForPreference( "string" );
@@ -108,20 +110,6 @@ public class CScanner extends BufferedRuleBasedScanner {
 	    	"uint64_t"
 	    };
 	    
-	    String[] directives = new String[] {
-	    	"#define",
-	    	"#include",
-	    	"#ifdef",
-	    	"#ifndef",
-	    	"#else",
-	    	"#undef",
-	    	"#if",
-	    	"#endif",
-	    	"#line",
-	    	"#error",
-	    	"#pragma"
-	    };
-	    
 	    String[] operators = new String[] {
 	    	"+",
 	    	"-",
@@ -169,6 +157,22 @@ public class CScanner extends BufferedRuleBasedScanner {
 	    	
 	    };
 	    
+	    /*
+	    String[] directives = new String[] {
+	    	"#define",
+	    	"#include",
+	    	"#ifdef",
+	    	"#ifndef",
+	    	"#else",
+	    	"#undef",
+	    	"#if",
+	    	"#endif",
+	    	"#line",
+	    	"#error",
+	    	"#pragma"
+		};
+		*/
+	    
 	    for ( String keyword : keywords ) {
 	    	wordRule.addWord( keyword, keywordTok );
 	    }
@@ -179,10 +183,6 @@ public class CScanner extends BufferedRuleBasedScanner {
 	    
 	    for ( String primType : primTypes ) {
 	    	wordRule.addWord( primType, primTok );
-	    }
-	    
-	    for ( String directive : directives ) {
-	    	directiveRule.addWord( directive, directiveTok );
 	    }
 	    
 	    for ( String op : operators ) {
@@ -224,7 +224,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 		    	numRule,
 		    	capsRule,
 		    	wordRule,
-		    	directiveRule,
+		    	//directiveRule,
 		    	operatorRule,
 		    	groupingRule,
 		    	new WhitespaceRule( new IWhitespaceDetector() {
