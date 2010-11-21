@@ -1,20 +1,13 @@
 package syntax.c;
 
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.rules.BufferedRuleBasedScanner;
-import org.eclipse.jface.text.rules.EndOfLineRule;
-import org.eclipse.jface.text.rules.ICharacterScanner;
-import org.eclipse.jface.text.rules.IRule;
-import org.eclipse.jface.text.rules.IWhitespaceDetector;
-import org.eclipse.jface.text.rules.IWordDetector;
-import org.eclipse.jface.text.rules.MultiLineRule;
-import org.eclipse.jface.text.rules.SingleLineRule;
-import org.eclipse.jface.text.rules.Token;
-import org.eclipse.jface.text.rules.WhitespaceRule;
+import org.eclipse.jface.text.rules.*;
 import org.eclipse.swt.graphics.Color;
 
 import syntax.CustomSingleTokenRule;
 import syntax.CustomWordRule;
+
+
 
 import app.Application;
 import app.Preferences;
@@ -61,7 +54,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 	    Token groupingTok  = getTokenForPreference( "grouping" );
 	    Token opTok        = getTokenForPreference( "operator" );
 	    
-	    Token multiCommentTok = getTokenForPreference( "comment" );
+	    //Token multiCommentTok = getTokenForPreference( "comment" );
 	    
 	    //add tokens for each reserved word
 	    String[] keywords = new String[]{
@@ -225,7 +218,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 	    
 	    IRule[] rules = new IRule[] {
 		    	new EndOfLineRule( "//", commentTok ),
-		    	new MultiLineRule( "/*", "*/", multiCommentTok, (char)ICharacterScanner.EOF, true ),
+		    	//new MultiLineRule( "/*", "*/", multiCommentTok, (char)ICharacterScanner.EOF, true ),
 		    	new SingleLineRule( "\"", "\"", stringTok, '\\' ),
 		    	new SingleLineRule( "'", "'", charTok, '\\' ),
 		    	numRule,
@@ -245,7 +238,7 @@ public class CScanner extends BufferedRuleBasedScanner {
 	    setDefaultReturnToken( other );
 	}
 	
-	Token getTokenForPreference( String preference ) {
+	public static Token getTokenForPreference( String preference ) {
 
 		Application app = Application.getInstance( );
 		

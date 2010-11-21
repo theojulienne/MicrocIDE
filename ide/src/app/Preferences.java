@@ -158,6 +158,10 @@ public class Preferences {
 		preferences.setDefault( "syntax.comment.g", 128 );
 		preferences.setDefault( "syntax.comment.b", 128 );
 		
+		preferences.setDefault( "syntax.doccomment.r", 128 );
+		preferences.setDefault( "syntax.doccomment.g", 128 );
+		preferences.setDefault( "syntax.doccomment.b", 196 );
+		
 		preferences.setDefault( "syntax.string.r", 32 );
 		preferences.setDefault( "syntax.string.g", 120 );
 		preferences.setDefault( "syntax.string.b", 32 );

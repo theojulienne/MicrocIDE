@@ -16,9 +16,16 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 public class CSourceViewerConfiguration extends SourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler( ISourceViewer sourceViewer ) {
 		PresentationReconciler pr = new PresentationReconciler();
-		DefaultDamagerRepairer ddr = new DefaultDamagerRepairer( new CScanner() );
 		
-		// TODO: set a repairer and damager for each partition (e.g. multi-line comments)
+		DefaultDamagerRepairer ddr = new DefaultDamagerRepairer( new CCommentBlockScanner() );
+	    pr.setDamager( ddr, CPartitionScanner.C_MULTILINE_COMMENT );
+	    pr.setRepairer( ddr, CPartitionScanner.C_MULTILINE_COMMENT );
+	    
+		ddr = new DefaultDamagerRepairer( new CDocCommentScanner() );
+	    pr.setDamager( ddr, CPartitionScanner.C_DOCUMENTATION_COMMENT );
+	    pr.setRepairer( ddr, CPartitionScanner.C_DOCUMENTATION_COMMENT );
+	    
+		ddr = new DefaultDamagerRepairer( new CScanner() );
 		pr.setRepairer(ddr, IDocument.DEFAULT_CONTENT_TYPE);
 		pr.setDamager(ddr, IDocument.DEFAULT_CONTENT_TYPE);
 		

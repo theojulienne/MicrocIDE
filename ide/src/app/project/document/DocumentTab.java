@@ -7,6 +7,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.LineNumberRulerColumn;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -23,12 +24,14 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.FileDialog;
 
+import syntax.c.CPartitionScanner;
+import syntax.c.CSourceViewerConfiguration;
+
 import files.FileIO;
 
 import app.Application;
 import app.project.ProjectWindow;
 
-import syntax.c.CSourceViewerConfiguration;
 
 public class DocumentTab extends CTabItem {
 
@@ -211,17 +214,7 @@ public class DocumentTab extends CTabItem {
 			parent.getShell( ).setActive( );
 			
 			canProceed = MessageDialog.openConfirm( parent.getShell( ), "Unsaved File", "There are unsaved changes in file: " + getText() + "\nDo you want to continue? (Changes will be lost)" );
-			/*
-			MessageBox messageBox = new MessageBox( parent.getShell( ), SWT.ICON_WARNING | SWT.OK | SWT.CANCEL );
-			messageBox.setText( "Unsaved File" );
-			messageBox.setMessage( "There are unsaved changes in file: " + getText() + "\nDo you want to continue? (Changes will be lost)" );
-			
-			int buttonID = messageBox.open();
-			
-			if ( buttonID == SWT.CANCEL ) {
-				canProceed = false;
-			}
-			*/
+
 		}
 		
 		if ( canProceed ) {
@@ -268,6 +261,12 @@ public class DocumentTab extends CTabItem {
 	public void updateFile( ) {
 		String content = FileIO.readFile( this.file );
 		document = new Document( content );
+		
+		CPartitionScanner scanner = new CPartitionScanner( );
+		FastPartitioner partitioner = new FastPartitioner( scanner, CPartitionScanner.PARTITION_TYPES );
+		partitioner.connect( document );
+		document.setDocumentPartitioner( partitioner );
+		        
 		sourceView.setDocument( document );
 		lastSave = content;
 		setUnsaved( false );
