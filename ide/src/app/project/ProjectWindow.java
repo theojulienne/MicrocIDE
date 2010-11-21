@@ -42,6 +42,7 @@ import build.CmdRunner;
 import files.FileIO;
 
 import app.Application;
+import app.Preferences;
 import app.dialogs.ProjectSettingsDialog;
 import app.project.document.DocumentTab;
 import app.project.navigation.MenuBar;
@@ -286,26 +287,34 @@ public class ProjectWindow {
 			tab.save( );
 		}
 	}
-
+	
 	public void openProject( ) {
+		openProject( null );
+	}
+
+	public void openProject( File projectPath ) {
 		
 		if ( closeProject( ) ) {
 			
-			File path = null;
+			File path = projectPath;
 			
-			DirectoryDialog openDialog = new DirectoryDialog( shell );
-
-			openDialog.setFilterPath( File.listRoots()[0].getAbsolutePath() );
-			openDialog.setText( "Open Project" );
-			openDialog.setMessage( "Select Project Directory to Open" );
-			String projectToOpen = openDialog.open();
-			
-			if ( projectToOpen != null ) {
-			
-				File projectPath = new File( projectToOpen );
-				path = projectPath;
+			if ( path == null ) {
+				DirectoryDialog openDialog = new DirectoryDialog( shell );
+	
+				openDialog.setFilterPath( File.listRoots()[0].getAbsolutePath() );
+				openDialog.setText( "Open Project" );
+				openDialog.setMessage( "Select Project Directory to Open" );
+				String projectToOpen = openDialog.open();
 				
-				
+				if ( projectToOpen != null ) {
+					path = new File( projectToOpen );
+				} else {
+					path = null;
+				}
+			}
+			
+			// confirm project file
+			if ( path != null ) {
 				boolean hasProjectFile = false;
 				for ( File file : projectPath.listFiles() ) {
 					if ( file.getName().equals( Application.projectFileName ) ) {
@@ -323,21 +332,19 @@ public class ProjectWindow {
 					} else {
 						path = null;
 					}
-					
-					/*
-					MessageBox messageBox = new MessageBox( shell, SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL );
-					messageBox.setText( "No Project File" );
-					messageBox.setMessage( "The selected folder has no project definition file.\nCreate one now?" );
-					
-					int buttonID = messageBox.open();
-					
-					if ( buttonID == SWT.OK ) {
-						openProjectSettings( );
-					} else if ( buttonID == SWT.CANCEL ) {
-						path = null;
-					}
-					*/
 				}
+			}
+			
+			// opening project, save as recently viewed
+			if ( path != null ) {
+				Preferences prefs = Application.getInstance().getPreferences();
+				ArrayList<String> recentProjects = prefs.getRecentList( );
+				
+				recentProjects.remove( path.getAbsolutePath() );
+				recentProjects.add( 0, path.getAbsolutePath() );
+				
+				prefs.setRecentList( recentProjects );
+				prefs.save( );
 			}
 			
 			

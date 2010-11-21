@@ -33,7 +33,7 @@ public class BuildConsoleTab extends CTabItem {
 		console = new StyledText( parent, SWT.BORDER | SWT.V_SCROLL | SWT.WRAP );
 		console.setEditable( false );
 		
-		font = Application.getInstance().getConsoleFont( );
+		font = Application.getInstance().getPreferences().getConsoleFont( );
 		console.setFont( font );
 		consoleText = "";
 		console.setText( consoleText );

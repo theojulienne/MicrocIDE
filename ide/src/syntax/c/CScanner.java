@@ -1,6 +1,5 @@
 package syntax.c;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.BufferedRuleBasedScanner;
 import org.eclipse.jface.text.rules.EndOfLineRule;
@@ -18,6 +17,7 @@ import syntax.CustomSingleTokenRule;
 import syntax.CustomWordRule;
 
 import app.Application;
+import app.Preferences;
 
 public class CScanner extends BufferedRuleBasedScanner {
 	public CScanner( ) {
@@ -249,14 +249,14 @@ public class CScanner extends BufferedRuleBasedScanner {
 
 		Application app = Application.getInstance( );
 		
-		IPreferenceStore preferences = app.getPreferenceStore();
+		Preferences preferences = app.getPreferences();
 		
-		Color colour = app.getColorPreference( "syntax." + preference );
+		Color colour = preferences.getColor( "syntax." + preference );
 		
 		Token token;
 		if ( preferences.contains( "syntax." + preference + ".font" ) ) {
 			token = new Token( new TextAttribute( colour, null, 
-					app.getPreferenceStore().getInt( "syntax." + preference + ".font" ) ) );
+					preferences.getInt( "syntax." + preference + ".font" ) ) );
 		} else {
 			token = new Token( new TextAttribute( colour ) );
 		}

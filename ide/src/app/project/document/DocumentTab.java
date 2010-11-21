@@ -98,7 +98,7 @@ public class DocumentTab extends CTabItem {
 		
 		ruler.addDecorator( 0, lineCol );
 		
-		Font sourceFont = Application.getInstance().getSourceFont( );
+		Font sourceFont = Application.getInstance().getPreferences().getSourceFont( );
 		
 		sourceView = new SourceViewer( parent, ruler, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL );
 		sourceView.getTextWidget().setLeftMargin( 5 );

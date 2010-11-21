@@ -1,6 +1,5 @@
 package app.dialogs;
 
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -19,18 +18,19 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
 import app.Application;
+import app.Preferences;
 
 public class PreferencesDialog extends Dialog {
 
 	private Shell shell;
 	private Label sampleSourceFont;
 	private Label sampleConsoleFont;
-	private PreferenceStore prefs;
+	private Preferences prefs;
 	
 	public PreferencesDialog( Shell parentShell ) {
 		super( parentShell, SWT.DIALOG_TRIM | SWT.MODELESS | SWT.RESIZE );
 		
-		prefs = Application.getInstance().getPreferenceStore();
+		prefs = Application.getInstance().getPreferences();
 	}
 	
 	protected void createContents( ) {
@@ -147,16 +147,9 @@ public class PreferencesDialog extends Dialog {
 			public void widgetDefaultSelected( SelectionEvent e ) {	
 			}
 			public void widgetSelected( SelectionEvent e ) {
-				try {
-					prefs.setValue( "console.font.face", sampleConsoleFont.getFont().getFontData()[0].getName() );
-					prefs.setValue( "console.font.size", sampleConsoleFont.getFont().getFontData()[0].getHeight() );
-					prefs.setValue( "source.font.face", sampleSourceFont.getFont().getFontData()[0].getName() );
-					prefs.setValue( "source.font.size", sampleSourceFont.getFont().getFontData()[0].getHeight() );
-					prefs.save( );
-				} catch ( Exception ex ) {
-					
-				}
-
+				prefs.setFont( "console", sampleConsoleFont.getFont().getFontData()[0] );
+				prefs.setFont( "source", sampleSourceFont.getFont().getFontData()[0] );
+				prefs.save( );
 			}
 		} );
 		

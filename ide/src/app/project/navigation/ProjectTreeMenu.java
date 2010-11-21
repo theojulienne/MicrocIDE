@@ -25,6 +25,8 @@ import org.eclipse.swt.program.Program;
 
 import org.eclipse.swt.widgets.*;
 
+import app.Application;
+import app.Preferences;
 import app.dialogs.FilenameDialog;
 import app.project.ProjectWindow;
 
@@ -541,6 +543,11 @@ public class ProjectTreeMenu {
 			project.openProject( );
 		} else if ( treeView.getItem( 1 ) == item ) {
 			project.newProject( );
+		} else {
+			if ( item.getData() != null ) {
+				File recentProjectPath = (File) item.getData( );
+				project.openProject( recentProjectPath );
+			}
 		}
 	}
 	
@@ -554,6 +561,33 @@ public class ProjectTreeMenu {
 		newOption.setText( "Create a new project" );
 		newOption.setImage( new Image( treeView.getDisplay(), "project_new.png" ) );
 		
+		new TreeItem( this.treeView, SWT.NONE );
+		
+		populateRecentProjects( );
+	}
+	
+	private void populateRecentProjects( ) {
+		
+		Preferences prefs = Application.getInstance().getPreferences();
+		
+		ArrayList<String> recentFiles = prefs.getRecentList( );
+		
+		if ( !recentFiles.isEmpty() ) {
+			
+			TreeItem recentProjects = new TreeItem( this.treeView, SWT.NONE );
+			recentProjects.setText( "Recent Projects:" );
+		
+			for ( String recentFilename : recentFiles ) {
+				File recentFile = new File( recentFilename );
+
+				if ( recentFile.exists() && recentFile.isDirectory() ) {
+					TreeItem newFilenameItem = new TreeItem( this.treeView, SWT.NONE );
+					newFilenameItem.setText( recentFile.getName() );
+					newFilenameItem.setData( recentFile );
+					newFilenameItem.setImage( images.get( "folder" ) );
+				}
+			}
+		}
 	}
 	
 	public void update( ) {
