@@ -148,7 +148,7 @@ public class ProjectWindow {
 	}
 	
 	private void addDocTabsListeners( ) {
-		
+
 		docTabs.addCTabFolder2Listener( new CTabFolder2Listener( ) {
 			public void close(CTabFolderEvent event) {
 				DocumentTab tab = (DocumentTab)event.item;
