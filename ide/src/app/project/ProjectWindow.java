@@ -650,7 +650,7 @@ public class ProjectWindow {
 		});
 		
 		// window title
-		shell.setText( Application.getInstance( ).getName( ) );
+		shell.setText( Application.appName );
 		
 		
 		

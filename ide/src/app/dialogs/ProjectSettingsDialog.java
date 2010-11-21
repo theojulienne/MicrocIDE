@@ -69,7 +69,7 @@ public class ProjectSettingsDialog extends Dialog {
 		
 		try {
 			// global project settings, presets, etc.
-			File settingsFile = new File( Application.projectSettingsFile );
+			File settingsFile = new File( Application.ideProjectPreferenceFile );
 			JSONObject globalSettings = new JSONObject( FileIO.readFile( settingsFile ) );
 			presets = globalSettings.getJSONObject( "presets" );
 			Iterator<String> presetIterator = presets.keys( );

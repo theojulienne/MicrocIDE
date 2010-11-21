@@ -118,7 +118,7 @@ public class MenuBar {
 		
 		
 		if ( Application.isMac( ) ) {
-	        CocoaUIEnhancer enhancer = new CocoaUIEnhancer( Application.getInstance().getName( ) );
+	        CocoaUIEnhancer enhancer = new CocoaUIEnhancer( Application.appName );
 	        enhancer.hookApplicationMenu( shell.getDisplay(), quitListener, aboutListener, preferenceListener );
 		}
 		

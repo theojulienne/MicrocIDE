@@ -117,9 +117,9 @@ public class Preferences {
 	public Preferences( Display display ) {
 		this.display = display;
 
-		File prefHandle = new File( Application.prefFile );
+		File prefHandle = new File( Application.idePreferenceFile );
 
-		preferences = new PreferenceStore( Application.prefFile );
+		preferences = new PreferenceStore( Application.idePreferenceFile );
 
 
 		try {

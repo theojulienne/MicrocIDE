@@ -546,7 +546,7 @@ public class BirdTerm extends ApplicationWindow implements IStatusTextAccepter
                {
                    MessageDialog.openInformation(getShell(), 
                            "BirdTerm",
-                           app.Application.getInstance().getName() + " uses the BirdTerm Serial Terminal Program (" + m_strVersion + ")" +
+                           app.Application.appName + " uses the BirdTerm Serial Terminal Program (" + m_strVersion + ")" +
                            "\r\nBirdTerm is a Free Open Source Serial Terminal Program from BoldInventions.com\r\n\n" +
                             "http://www.boldinventions.com or search http://sourceforge.net for 'BirdTerm");
                }
