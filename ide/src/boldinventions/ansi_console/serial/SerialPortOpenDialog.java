@@ -35,9 +35,6 @@ import org.eclipse.swt.*;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.*;
-import org.eclipse.jface.dialogs.IDialogConstants;
-
-import boldinventions.ansi_console.serial.SerialPortSettingsContainer.ExceptionSettingsParse;
 
 
 public class SerialPortOpenDialog extends Dialog 
@@ -69,7 +66,8 @@ public class SerialPortOpenDialog extends Dialog
       
 
       // Loop through all the serial ports and add each one to the combo box.
-        java.util.Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+        @SuppressWarnings("rawtypes")
+		java.util.Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
         while ( portEnum.hasMoreElements() ) 
         {
             portIdentifier = (CommPortIdentifier) portEnum.nextElement();
@@ -162,7 +160,8 @@ public class SerialPortOpenDialog extends Dialog
         comboPortSelect.add("Select a Port",iPort++);
         
         // Loop through all the serial ports and add each one to the combo box.
-          java.util.Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+          @SuppressWarnings("rawtypes")
+		java.util.Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
           while ( portEnum.hasMoreElements() ) 
           {
               CommPortIdentifier portIdentifier = (CommPortIdentifier) portEnum.nextElement();

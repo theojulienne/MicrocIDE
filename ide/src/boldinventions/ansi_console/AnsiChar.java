@@ -24,10 +24,6 @@
 
 package boldinventions.ansi_console;
 
-import org.eclipse.swt.graphics.Device;
-
-
-
 
 	/**
 	 * AnsiChar is a single character with a foreground color, a background color and an attribute

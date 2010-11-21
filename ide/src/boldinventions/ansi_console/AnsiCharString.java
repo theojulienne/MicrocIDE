@@ -24,7 +24,6 @@
 
 package boldinventions.ansi_console;
 
-import java.util.*;
 /**
  * AnsiCharString for containing a string of like characters with the same
  * attributes and color

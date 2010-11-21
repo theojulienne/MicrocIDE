@@ -25,7 +25,6 @@
 package boldinventions.ansi_console;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 import java.io.UnsupportedEncodingException;

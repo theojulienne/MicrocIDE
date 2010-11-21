@@ -27,7 +27,6 @@ package boldinventions.ansi_console;
 
 import java.util.*;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 

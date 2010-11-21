@@ -29,9 +29,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.jface.text.*;
 import java.util.*;
-import java.io.*;
 
 /**
  * TextConsole is a canvas which implements a text display of

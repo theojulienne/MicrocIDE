@@ -24,11 +24,6 @@
 
 package boldinventions.ansi_console.serial;
 
-
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.*;
 import java.io.*;
 import java.util.*;

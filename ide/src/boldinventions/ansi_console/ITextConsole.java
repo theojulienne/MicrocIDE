@@ -24,9 +24,6 @@
 
 package boldinventions.ansi_console;
 
-
-import java.io.*;
-
 import org.eclipse.swt.graphics.Font;
 
 /**
