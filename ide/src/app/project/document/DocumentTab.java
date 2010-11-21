@@ -33,6 +33,7 @@ import syntax.c.CSourceViewerConfiguration;
 public class DocumentTab extends CTabItem {
 
 	private SourceViewer sourceView;
+	
 	private Document document;
 	private CTabFolder parent;
 	private File file;

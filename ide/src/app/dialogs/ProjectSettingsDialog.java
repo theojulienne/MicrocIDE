@@ -46,7 +46,6 @@ public class ProjectSettingsDialog extends Dialog {
 			String jsonText = FileIO.readFile( projectFile );
 			commands = new JSONObject( jsonText ).getJSONObject( "commands" );
 		} catch ( Exception e ) {
-			e.printStackTrace();
 			commands = null;
 		}
 	}
