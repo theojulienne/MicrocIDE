@@ -300,17 +300,17 @@ public class MenuBar {
 		if ( focussedTab != null ) {
 			
 			if ( cmd == CUT ) {
-				focussedTab.cut( );
+				focussedTab.getDocument( ).cut( );
 			} else if ( cmd == COPY ){
-				focussedTab.copy( );
+				focussedTab.getDocument( ).copy( );
 			} else if ( cmd == PASTE ) {
-				focussedTab.paste( );
+				focussedTab.getDocument( ).paste( );
 			} else if ( cmd == UNDO ) {
-				focussedTab.undo( );
+				focussedTab.getDocument( ).undo( );
 			} else if ( cmd == REDO ) {
-				focussedTab.redo( );
+				focussedTab.getDocument( ).redo( );
 			} else if ( cmd == SELECT_ALL ) {
-				focussedTab.selectAll( );
+				focussedTab.getDocument( ).selectAll( );
 			}
 			
 		} else {

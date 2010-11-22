@@ -8,7 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileIO {
-	public static void writeFile( String content, File file ) {
+	public static boolean writeFile( String content, File file ) {
+		boolean isSuccessful = true;
 		try {
 			BufferedWriter writer = new BufferedWriter( new FileWriter( file.getAbsolutePath( ) ) );
 			
@@ -16,8 +17,10 @@ public class FileIO {
 			
 			writer.close( );
 		} catch (IOException e) {
-			e.printStackTrace();
+			isSuccessful = false;
 		}
+		
+		return isSuccessful;
 	}
 	
 	public static String readFile( File file ) {

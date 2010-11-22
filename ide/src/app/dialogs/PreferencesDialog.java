@@ -20,6 +20,9 @@ import org.eclipse.swt.widgets.TabItem;
 import app.Application;
 import app.Preferences;
 
+// TODO: general settings, e.g. single or double-click to open files, to display or not display recently opened projects, button to clear recently opened projects list, etc.
+// TODO later: plug-ins (document plugins and tooltab plugins)
+
 public class PreferencesDialog extends Dialog {
 
 	private Shell shell;

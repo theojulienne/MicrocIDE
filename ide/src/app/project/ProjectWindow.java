@@ -3,9 +3,7 @@ package app.project;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -14,7 +12,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Listener;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.StyledText;
 
 import org.eclipse.swt.events.*;
 
@@ -46,6 +43,7 @@ import app.Application;
 import app.Preferences;
 import app.dialogs.ProjectSettingsDialog;
 import app.project.document.DocumentTab;
+import app.project.document.DocumentTabFolder;
 import app.project.navigation.MenuBar;
 import app.project.navigation.ProjectTreeMenu;
 import app.toolTabs.BuildConsoleTab;
@@ -56,26 +54,24 @@ public class ProjectWindow {
 	private static final int DEPLOY = 2;
 	
 	private Shell shell;
-	private CTabFolder docTabs;
+	private MenuBar menuBar;
+
+	ProjectTreeMenu projectMenu;
+	
+	private DocumentTabFolder docTabs;
 	
 	private BuildConsoleTab buildConsole;
-	
 	private SerialTerminalTab serialTerminal;
-	
-	private Hashtable<File, DocumentTab> documents;
-	private MenuBar menuBar;
-	
-	ProjectTreeMenu projectMenu;
 	
 	private CmdRunner deployRunner;
 	private CmdRunner buildRunner;
 	
 	private HashMap<String, Image> images;
 	
+	// TODO: Should this be elsewhere? (plugin)
 	private BirdTerm termWindow;
 	
 	public ProjectWindow() {
-		documents = new Hashtable<File, DocumentTab>( );
 		images = new HashMap<String, Image>( );
 	}
 	
@@ -83,7 +79,6 @@ public class ProjectWindow {
 		consoleTabs.addCTabFolder2Listener( new CTabFolder2Listener() {
 
 		      public void close( CTabFolderEvent evt ) {
-		    	  
 		      }
 
 		      public void minimize( CTabFolderEvent evt ) {
@@ -134,7 +129,6 @@ public class ProjectWindow {
 		      }
 
 		      public void showList(CTabFolderEvent evt) {
-		    	  
 		      }
 		} );
 		
@@ -153,7 +147,7 @@ public class ProjectWindow {
 		docTabs.addCTabFolder2Listener( new CTabFolder2Listener( ) {
 			public void close(CTabFolderEvent event) {
 				DocumentTab tab = (DocumentTab)event.item;
-				if ( !closeDocument( tab ) ) {
+				if ( !tab.close( ) ) {
 					event.doit = false;
 				}
 			}
@@ -177,26 +171,25 @@ public class ProjectWindow {
 		boolean closed = true;
 		DocumentTab tab = getFocussedDocumentTab( );
 		if ( tab != null ) {
-			closed = closeDocument( tab );
+			closed = tab.close( );
 		}
 		return closed;
 	}
 	
 	public DocumentTab getFocussedDocumentTab( ) {
 		Control control = this.shell.getDisplay( ).getFocusControl( );
+		DocumentTab focussedTab = null;
+		
 		if ( control != null ) {
-			if ( control instanceof StyledText ) {
-				Enumeration<DocumentTab> docEnum = documents.elements();
-				while ( docEnum.hasMoreElements( ) ) {
-					DocumentTab tab = docEnum.nextElement( );
-					if ( tab.getTextWidget() == (StyledText)control ) {
-						return tab;
-					}
+			for ( DocumentTab tab : docTabs.getDocumentTabs() ) {
+				if ( tab.getDocument( ).getMainWidget( ) == control ) {
+					focussedTab = tab;
+					break;
 				}
 			}
 		}
 		
-		return null;
+		return focussedTab;
 	}
 	
 	
@@ -215,7 +208,8 @@ public class ProjectWindow {
 		
 		projectMenu = new ProjectTreeMenu( fileForm, projectDir, this );
 		
-		docTabs = new CTabFolder( fileForm, SWT.CLOSE | SWT.TOP | SWT.BORDER ); // | SWT.FLAT
+		docTabs = new DocumentTabFolder( fileForm, SWT.CLOSE | SWT.TOP | SWT.BORDER ); // | SWT.FLAT
+		docTabs.setProjectWindow( this );
 		
 		fileForm.setWeights( new int[]{ 1, 4 } );
 		
@@ -236,11 +230,6 @@ public class ProjectWindow {
 			}
 		} );
 		
-		docTabs.setBorderVisible(true);
-		// appears on mouse-over
-		docTabs.setUnselectedCloseVisible( true );
-		// makes them less ugly
-		docTabs.setSimple( true );
 
 		addDocTabsListeners( );
 		
@@ -268,24 +257,22 @@ public class ProjectWindow {
 	}
 	
 	public void saveSelectedTab( ) {
-		DocumentTab selTab = getFocussedDocumentTab();
+		DocumentTab selTab = getFocussedDocumentTab( );
 		if ( selTab != null ) {
-			selTab.save( );
+			selTab.getDocument( ).save( );
 		}
 	}
 
 	public void saveAsSelectedTab( ) {
-		DocumentTab selTab = getFocussedDocumentTab();
+		DocumentTab selTab = getFocussedDocumentTab( );
 		if ( selTab != null ) {
-			selTab.saveAs( );
-		}	
+			selTab.getDocument( ).saveAs( );
+		}
 	}
 	
 	public void saveAll( ) {
-		Enumeration<DocumentTab> docEnum = documents.elements();
-		while ( docEnum.hasMoreElements( ) ) {
-			DocumentTab tab = docEnum.nextElement( );
-			tab.save( );
+		for ( DocumentTab tab : docTabs.getDocumentTabs( ) ) {
+			tab.getDocument( ).save( );
 		}
 	}
 	
@@ -394,39 +381,25 @@ public class ProjectWindow {
 	public void find( ) {
 		DocumentTab tab = getFocussedDocumentTab( );
 		if ( tab != null ) {
-			tab.find( );
+			tab.getDocument( ).find( );
 		}
 	}
 	
 	public void findNext( ) {
 		DocumentTab tab = getFocussedDocumentTab( );
 		if ( tab != null ) {
-			tab.findNext( );
+			tab.getDocument( ).findNext( );
 		}
 	}
 	
 	public void findPrev( ) {
 		DocumentTab tab = getFocussedDocumentTab( );
 		if ( tab != null ) {
-			tab.findPrev( );
+			tab.getDocument( ).findPrev( );
 		}
-	}
-	
-	public ArrayList<DocumentTab> getUnsaved( ) {
-		ArrayList<DocumentTab> needSaving = new ArrayList<DocumentTab>( );
-		Enumeration<DocumentTab> docEnum = documents.elements( );
-		while ( docEnum.hasMoreElements( ) ) {
-			DocumentTab tab = docEnum.nextElement( );
-			if ( !tab.isSaved( ) ) {
-				needSaving.add( tab );
-			}
-		}
-		
-		return needSaving;
 	}
 	
 	public void openDocument( File fileToOpen ) {
-		DocumentTab tab;
 		if ( fileToOpen.getName().equals( Application.projectFileName ) ) {
 			
 			boolean openPrefs = MessageDialog.openQuestion( shell, "Opening Settings", "This is a project settings file.\nDo you want to open the settings dialog instead?" );
@@ -436,16 +409,7 @@ public class ProjectWindow {
 			}
 		}
 		
-		
-		if ( documents.containsKey( fileToOpen ) ) {
-			tab = documents.get( fileToOpen );
-		} else {
-			System.out.println("making tab");
-			tab = new DocumentTab( this, docTabs, fileToOpen );
-			documents.put( fileToOpen, tab );
-		}
-		
-		tab.setFocus( );
+		docTabs.openDocument( fileToOpen );
 	}
 	
 	public boolean canQuit( ) {
@@ -458,44 +422,23 @@ public class ProjectWindow {
 	
 	public boolean closeProject( ) {
 		boolean canClose = true;
-			
-		Enumeration<DocumentTab> docEnum = documents.elements( );
-		while ( docEnum.hasMoreElements( ) ) {
-			DocumentTab tab = docEnum.nextElement( );
-			File key = tab.getFile();
-			if ( !tab.close( ) ) {
+		
+		for ( DocumentTab tab : docTabs.getDocumentTabs() ) {
+			if ( !tab.close() ) {
 				canClose = false;
 				break;
-			} else {
-				documents.remove( key );
 			}
 		}
 		
-		projectMenu.setPath( null );
+		if ( canClose ) {
+			projectMenu.setPath( null );
+		}
 		
 		return canClose;
 	}
 	
-	public void renameDocument( File file, File newFile ) {
-		DocumentTab tab = documents.remove( file );
-		if ( tab != null ) {
-			tab.rename( newFile );
-			documents.put( newFile, tab );
-		}
-	}
-
-	
-	public boolean closeDocument( DocumentTab tabToClose ) {
-		File file = tabToClose.getFile();
-		boolean closed = tabToClose.close( );
-		if ( closed ) {
-			documents.remove( file );
-		}
-		return closed;
-	}
-	
 	public void finishCommand( int id ) {
-		// SYNC
+		// called from syncexec
 		
 		final Runnable resetBuildButton = new Runnable() {
 			public void run( ) {
@@ -673,5 +616,9 @@ public class ProjectWindow {
 	
 	public boolean isDisposed( ) {
 		return shell.isDisposed( );
+	}
+
+	public void renameDocument( File fromFile, File newFile ) {
+		docTabs.renameDocumentTab( fromFile, newFile );
 	}
 }
