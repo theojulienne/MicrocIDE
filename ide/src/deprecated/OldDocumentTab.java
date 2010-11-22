@@ -24,14 +24,16 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.FileDialog;
 
-import syntax.c.CPartitionScanner;
-import syntax.c.CSourceViewerConfiguration;
+import common.FileIO;
 
-import files.FileIO;
+import plugins.documents.sourceDocument.FindReplaceDialog;
+import plugins.documents.sourceDocument.syntax.c.CPartitionScanner;
+import plugins.documents.sourceDocument.syntax.c.CSourceViewerConfiguration;
+
+
 
 import app.Application;
 import app.project.ProjectWindow;
-import app.project.document.sourceDocument.FindReplaceDialog;
 
 // TODO: refactor into not extending a CTabItem to allow easier plugin-ing and tab reordering
 // N.B. tab re-ordering requires tab creation and deletion and setControl-ing. 

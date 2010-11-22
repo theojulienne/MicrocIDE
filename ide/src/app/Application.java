@@ -17,8 +17,10 @@ public class Application {
 	private static Application instance = null;
 	
 	private Preferences preferences;
-	private Display display;
+	private static Display display;
 	private PreferencesDialog prefDialog; 
+	
+	private ImageManager imageManager;
 
 	public static boolean isMac( ) {
         if ( System.getProperty( "os.name" ).equals( "Mac OS X" ) ) {
@@ -35,11 +37,16 @@ public class Application {
 		prefDialog.open( );
 	}
 	
+	public ImageManager getImageManager( ) {
+		return imageManager;
+	}
+	
 	private Application( ) {
 		
 		preferences = new Preferences( display );
-		
+		imageManager = new ImageManager( display );
 		instance = this;
+		
 	}
 	
 	public static Application getInstance( ) {
@@ -53,12 +60,12 @@ public class Application {
 		return this.preferences;
 	}
 	
-	public void setDisplay( Display display ) {
-		this.display = display;
+	public static void setDisplay( Display display ) {
+		Application.display = display;
 	}
 	
-	public Display getDisplay( Display display ) {
-		return this.display;
+	public static Display getDisplay( ) {
+		return display;
 	}
 	
 	/**
@@ -69,9 +76,11 @@ public class Application {
 		Display.setAppName( appName );
 		
 		Display display = new Display( );
+
+		Application.setDisplay( display );
 		
-		Application app = Application.getInstance( );
-		app.setDisplay( display );
+		// init
+		Application.getInstance( );
 		
 		ProjectWindow initialProject = new ProjectWindow( );
 		initialProject.open( display, null );

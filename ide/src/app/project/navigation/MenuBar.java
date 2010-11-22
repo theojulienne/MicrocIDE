@@ -17,10 +17,12 @@ import org.eclipse.swt.widgets.Text;
 
 import app.Application;
 import app.CocoaUIEnhancer;
+import app.plugin.interfaces.IMenuBar;
 import app.project.ProjectWindow;
-import app.project.document.DocumentTab;
 
-public class MenuBar {
+import app.document.DocumentTab;
+
+public class MenuBar implements IMenuBar {
 	private ProjectWindow projectWindow;
 	
 	private MenuItem fileNewProjItem;
@@ -48,11 +50,13 @@ public class MenuBar {
 	private MenuItem editPreferences;
 	
 	private MenuItem projectSettings;
-	private MenuItem projectBuild;
-	private MenuItem projectDeploy;
 	
 	private MenuItem serialAppOpen;
 
+	private Menu menu;
+	
+	private Shell shell;
+	
 	private static final int CUT = 0;
 	private static final int COPY = 1;
 	private static final int PASTE = 2;
@@ -67,8 +71,6 @@ public class MenuBar {
 		fileCloseItem.setEnabled( enabled );
 		fileSaveAllItem.setEnabled( enabled );
 		projectSettings.setEnabled( enabled );
-		projectBuild.setEnabled( enabled );
-		projectDeploy.setEnabled( enabled );
 	}
 	
 	public void setDocumentEnabled( boolean enabled ) {
@@ -130,9 +132,9 @@ public class MenuBar {
 		}
 		
 		
+		this.shell = shell;
 		
-		
-		Menu menu = new Menu( shell, SWT.BAR );
+		menu = new Menu( shell, SWT.BAR );
 		
 		this.projectWindow = projectWindow;
 		
@@ -272,34 +274,26 @@ public class MenuBar {
 		projectSettings.setAccelerator( SWT.MOD1 | 'P' );
 		projectSettings.setEnabled( false );
 		
-		new MenuItem( projectMenu, SWT.SEPARATOR );
-		
-		projectBuild = new MenuItem( projectMenu, SWT.PUSH );
-		projectBuild.setText( "&Build" );
-		projectBuild.setAccelerator( SWT.MOD1 | 'B' );
-		projectBuild.setEnabled( false );
-		
-		projectDeploy = new MenuItem( projectMenu, SWT.PUSH );
-		projectDeploy.setText( "&Deploy" );
-		projectDeploy.setAccelerator( SWT.MOD1 | 'D' );
-		projectDeploy.setEnabled( false );
-		
 		// Serial Menu
-
-		MenuItem serialMenuItem = new MenuItem( menu, SWT.CASCADE );
-		serialMenuItem.setText( "&Serial" );
-		
-		Menu serialMenu = new Menu( shell, SWT.DROP_DOWN );
-		serialMenuItem.setMenu( serialMenu );
+		Menu serialMenu = addNewMenu( "&Serial" );
 		
 		serialAppOpen = new MenuItem( serialMenu, SWT.PUSH );
 		serialAppOpen.setText( "&Open Serial Terminal Window" );
 		serialAppOpen.setAccelerator( SWT.MOD1 | 'T' );
 		
-		
 		addHandlers( );
 		
 		shell.setMenuBar( menu );
+	}
+	
+	public Menu addNewMenu( String menuText ) {
+		MenuItem customMenuItem = new MenuItem( menu, SWT.CASCADE );
+		customMenuItem.setText( menuText );
+		
+		Menu customMenu = new Menu( shell, SWT.DROP_DOWN );
+		customMenuItem.setMenu( customMenu );
+		
+		return customMenu;
 	}
 	
 	private void doCommand( int cmd ) {
@@ -519,22 +513,6 @@ public class MenuBar {
 			}
 		} );
 		
-		projectBuild.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				projectWindow.build( );
-			}
-		} );
-		
-		projectDeploy.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				projectWindow.deploy( );
-			}
-		} );
-		
 		serialAppOpen.addSelectionListener( new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -555,13 +533,5 @@ public class MenuBar {
 		
 		}
 		
-	}
-	
-	public void setDeployEnabled( boolean enabled ) {
-		projectDeploy.setEnabled( enabled );
-	}
-	
-	public void setBuildEnabled( boolean enabled ) {
-		projectBuild.setEnabled( enabled );
 	}
 }

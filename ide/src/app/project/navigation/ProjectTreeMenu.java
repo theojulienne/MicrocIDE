@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -22,15 +21,23 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
-import org.eclipse.swt.widgets.*;
 
 import app.Application;
+import app.ImageManager;
 import app.Preferences;
 import app.dialogs.FilenameDialog;
-import app.plugin.IDEPlugin;
-import app.plugin.PluginManager;
 import app.project.ProjectWindow;
+import app.project.navigation.ToolBar;
 
 public class ProjectTreeMenu {
 	private GridLayout grid;
@@ -40,13 +47,9 @@ public class ProjectTreeMenu {
 	private Listener openListener;
 	private Label statusBar;
 	private ToolBar toolBar;
-	private HashMap<String, Image> images;
-	private ArrayList<String> iconExtensions;
 	private HashMap<File, Boolean> openDirs;
 	private Menu popupMenu;
 	
-	private ToolItem buildButton;
-	private ToolItem deployButton;
 	ProjectWindow project;
 	
 	public ProjectTreeMenu( SashForm fileForm, File path, ProjectWindow project ) {
@@ -66,140 +69,10 @@ public class ProjectTreeMenu {
 		
 		widgetArea.setLayout( grid );
 		
-		Display display = fileForm.getDisplay( );
-		
-
-		images = new HashMap<String, Image>();
-		images.put( "project settings", new Image( display, "project_settings.png" ) );
-		images.put( "new folder", new Image( display, "folder_add.png" ) );
-		images.put( "reload", new Image( display, "reload.png" ) );
-		images.put( "new file", new Image( display, "file_add.png" ) );
-		images.put( "build", new Image( display, "build.png" ) );
-		images.put( "deploy", new Image( display, "deploy.png" ) );
-
-		images.put( "stop", new Image( display, "stop.png") );
-		
-		images.put( "folder", new Image( display, "folder.png" ) );
-		images.put( "file settings", new Image( display, "doc_settings.png" ) );
-		images.put( "file bin", new Image( display, "doc_bin.png" ) );
-		images.put( "file hex", new Image( display, "doc_bin.png" ) );
-		images.put( "file other", new Image( display, "doc_other.png" ) );
-		
-
-		iconExtensions = new ArrayList<String>();
-		iconExtensions.add( "c" );
-		iconExtensions.add( "cpp" );
-		iconExtensions.add( "h" );
-		iconExtensions.add( "xml" );
-		iconExtensions.add( "hex" );
-		iconExtensions.add( "bin" );
-		iconExtensions.add( "settings" );
-		iconExtensions.add( "txt" );
-		
-		for ( IDEPlugin plugin : PluginManager.listPlugins() ) {
-			for ( String ext : plugin.getSupportedDocumentExtensions() ) {
-				String filename = plugin.getIconFilenameForExtension( ext );
-				if ( filename != null && !images.containsKey( "file " + ext ) ) {
-					images.put( "file " + ext, new Image( display, filename ) );
-					iconExtensions.add( ext );
-				}
-			}
-		}
-	
-		
-		
-		
-		toolBar = new ToolBar( widgetArea, SWT.FLAT | SWT.HORIZONTAL );
+		toolBar = new ToolBar( project, this, widgetArea, SWT.FLAT | SWT.HORIZONTAL );
 		GridData toolBarData = new GridData( SWT.FILL, SWT.LEFT, true, false );
 		toolBar.setLayoutData( toolBarData );
 		
-		ToolItem reloadButton = new ToolItem( toolBar, SWT.PUSH );
-		reloadButton.setImage( images.get( "reload" ) );
-		reloadButton.setToolTipText( "Reload Project" );
-		reloadButton.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				update( );
-			}
-		} );
-		
-		new ToolItem( toolBar, SWT.SEPARATOR );
-		
-		ToolItem projectSettingsButton = new ToolItem( toolBar, SWT.PUSH );
-		projectSettingsButton.setImage( images.get( "project settings") );
-		projectSettingsButton.setToolTipText( "Project Settings" );
-		projectSettingsButton.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				openProjSettings( );
-			}
-		} );
-		
-		new ToolItem( toolBar, SWT.SEPARATOR );
-		
-		ToolItem createDirButton = new ToolItem( toolBar, SWT.PUSH );
-		createDirButton.setImage( images.get( "new folder" ) );
-		createDirButton.setToolTipText( "New Folder" );
-		createDirButton.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				createDir( getSelectedDir() );
-			}
-		} );
-		
-		ToolItem createFileButton = new ToolItem( toolBar, SWT.PUSH );
-		createFileButton.setImage( images.get( "new file") );
-		createFileButton.setToolTipText( "New File" );
-		createFileButton.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				createFile( getSelectedDir( ) );
-			}
-		} );
-		
-		new ToolItem( toolBar, SWT.SEPARATOR );
-		
-		buildButton = new ToolItem( toolBar, SWT.PUSH );
-		buildButton.setImage( images.get( "build") );
-		buildButton.setToolTipText( "Build Project" );
-		buildButton.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				Boolean building = (Boolean) e.widget.getData();
-				
-				if ( building != null && building) {
-					stopBuild( );
-				} else {
-					build( );
-				}
-			}
-		} );		
-		
-		deployButton = new ToolItem( toolBar, SWT.PUSH );
-		deployButton.setImage( images.get( "deploy") );
-		deployButton.setToolTipText( "Deploy Project" );
-		deployButton.addSelectionListener( new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-
-				Boolean deploying = (Boolean) e.widget.getData();
-				if ( deploying != null && deploying) {
-					stopDeploy( );
-				} else {
-					deploy( );
-				}
-			}
-		} );
-		
-		for ( Entry<String, Image> entry : images.entrySet() ) {
-			project.addImage( entry.getKey(), entry.getValue() );
-		}
 		
 		
 		// reload project, new project, open project, project properties, create dir, create file, 
@@ -216,31 +89,11 @@ public class ProjectTreeMenu {
 		update( );
 	}
 	
-	private void build( ) {
-		project.build( );
+	public ToolBar getToolBar( ) {
+		return this.toolBar;
 	}
 	
-	private void deploy( ) {
-		project.deploy( );
-	}
-	
-	private void stopBuild( ) {
-		project.stopBuild( );
-	}
-	
-	private void stopDeploy( ) {
-		project.stopDeploy( );
-	}
-	
-	public ToolItem getBuildButton( ) {
-		return buildButton;
-	}
-	
-	public ToolItem getDeployButton( ) {
-		return deployButton;
-	}
-	
-	private File getSelectedFile( ) {
+	public File getSelectedFile( ) {
 		File selFile = null;
 		
 		TreeItem[] items = treeView.getSelection();
@@ -251,7 +104,7 @@ public class ProjectTreeMenu {
 		return selFile;
 	}
 	
-	private File getSelectedDir( ) {
+	public File getSelectedDir( ) {
 
 		File parent = null;
 		
@@ -342,7 +195,7 @@ public class ProjectTreeMenu {
 	
 	// Popup Menu Drivers
 	
-	private void deleteFile( File file ) {
+	public void deleteFile( File file ) {
 		Shell shell = widgetArea.getShell();
 		
 		if ( file == null ) return;
@@ -362,7 +215,7 @@ public class ProjectTreeMenu {
 		update( );
 	}
 	
-	private void createDir( File parent ) {
+	public void createDir( File parent ) {
 		if ( parent == null ) {
 			parent = project.getPath( );
 		}
@@ -379,7 +232,7 @@ public class ProjectTreeMenu {
 		update( );
 	}
 	
-	private void createFile( File parent ) {
+	public void createFile( File parent ) {
 		if ( parent == null ) {
 			parent = this.path;
 		}
@@ -399,7 +252,7 @@ public class ProjectTreeMenu {
 		update( );
 	}
 	
-	private void renameFile( File file ) {
+	public void renameFile( File file ) {
 		if ( file == null ) return;
 		
 		Shell shell = widgetArea.getShell();
@@ -427,7 +280,7 @@ public class ProjectTreeMenu {
 		update( );
 	}
 	
-	private void openContainingDir( File file ) {
+	public void openContainingDir( File file ) {
 		if ( file == null ) return;
 		
 		if ( file.getParent() != null ) {
@@ -435,19 +288,10 @@ public class ProjectTreeMenu {
 		}
 	}
 	
-	private void launchFileExternally( File file ) {
+	public void launchFileExternally( File file ) {
 		if ( file == null ) return;
 		
 		Program.launch( file.getAbsolutePath( ) );
-	}
-	
-	
-	
-	
-	
-	
-	private void openProjSettings( ) {
-		project.openProjectSettings( );
 	}
 	
 	public void setOpenListener( Listener listener ) {
@@ -458,7 +302,7 @@ public class ProjectTreeMenu {
 		statusBar = label;
 	}
 	
-	private void openFile( File file ) {
+	public void openFile( File file ) {
 		
 		if ( openListener != null ) {
 			Event e = new Event();
@@ -476,6 +320,9 @@ public class ProjectTreeMenu {
 	}
 	
 	private void displayFiles( File fileParent, TreeItem itemParent ) {
+		
+		ImageManager images = Application.getInstance().getImageManager();
+		
 		if ( fileParent == null ) {
 			return;
 		}
@@ -505,7 +352,7 @@ public class ProjectTreeMenu {
 				if ( list[i].isDirectory() ) {
 					
 					subItem.setBackground( new Color(this.treeView.getDisplay(), 245, 245, 255) );
-					subItem.setImage( images.get("folder") );
+					subItem.setImage( images.getImage("folder") );
 					
 					if ( shouldBeOpen( list[i] ) ) {
 						// item should be open, expand it on load
@@ -522,18 +369,17 @@ public class ProjectTreeMenu {
 					String name = list[i].getName( );
 					String[] parts = name.split( "\\." );
 					
+					Image extIcon = null;
 					if ( parts.length > 1 ) {
 						String ext = parts[parts.length-1];
-						
-						if ( iconExtensions.contains( ext ) ) {
-							subItem.setImage( images.get( "file " + ext ) );
-						} else {
-							subItem.setImage( images.get( "file other" ) );
-						}
-					} else {
-						subItem.setImage( images.get( "file other" ) );
+						extIcon = images.getIconForExtension( ext );
+					} 
+					
+					if ( extIcon == null ) {
+						extIcon = images.getImage( "defaultIcon" );
 					}
 					
+					subItem.setImage( extIcon );
 				}
 				
 				subItem.setData( list[i] );
@@ -560,7 +406,6 @@ public class ProjectTreeMenu {
 	}
 	
 	private void displayOpenMenu( ) {
-		
 		TreeItem openOption = new TreeItem( this.treeView, SWT.NONE );
 		openOption.setText( "Open an existing project" );
 		openOption.setImage( new Image( treeView.getDisplay(), "project_explore.png" ) );
@@ -575,6 +420,7 @@ public class ProjectTreeMenu {
 	}
 	
 	private void populateRecentProjects( ) {
+		ImageManager images = Application.getInstance().getImageManager();
 		
 		Preferences prefs = Application.getInstance().getPreferences();
 		
@@ -592,7 +438,7 @@ public class ProjectTreeMenu {
 					TreeItem newFilenameItem = new TreeItem( this.treeView, SWT.NONE );
 					newFilenameItem.setText( recentFile.getName() );
 					newFilenameItem.setData( recentFile );
-					newFilenameItem.setImage( images.get( "folder" ) );
+					newFilenameItem.setImage( images.getImage( "folder" ) );
 				}
 			}
 		}
@@ -608,6 +454,7 @@ public class ProjectTreeMenu {
 		}
 		
 		if ( path != null ) {
+			// project loaded
 			popupMenu.setEnabled( true );
 			
 			try {
@@ -616,14 +463,16 @@ public class ProjectTreeMenu {
 				e.printStackTrace();
 			} finally {
 				toolBar.setEnabled( true );
-				project.getMenuBar( ).setProjectEnabled( true );
+				project.setProjectEnabled( true );
 			}
 		} else {
+			// no project loaded
 			popupMenu.setEnabled( false );
 			
-			displayOpenMenu( );
 			toolBar.setEnabled( false );
-			project.getMenuBar( ).setProjectEnabled( false );
+			project.setProjectEnabled( false );
+			
+			displayOpenMenu( );
 		}
 		
 		/*
