@@ -189,9 +189,12 @@ public class ProjectWindow {
 			}
 		}
 		
+		if ( focussedTab == null ) {
+			focussedTab = (DocumentTab)docTabs.getSelection( );
+		}
+		
 		return focussedTab;
 	}
-	
 	
 	private void createUI( File projectDir ) {
 		

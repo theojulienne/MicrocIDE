@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.*;
 import app.Application;
 import app.Preferences;
 import app.dialogs.FilenameDialog;
+import app.plugin.IDEPlugin;
+import app.plugin.PluginManager;
 import app.project.ProjectWindow;
 
 public class ProjectTreeMenu {
@@ -78,18 +80,12 @@ public class ProjectTreeMenu {
 		images.put( "stop", new Image( display, "stop.png") );
 		
 		images.put( "folder", new Image( display, "folder.png" ) );
-		images.put( "file txt", new Image( display, "doc_txt.png" ) );
-		images.put( "file c", new Image( display, "doc_c.png" ) );
-		images.put( "file cpp", new Image( display, "doc_cpp.png" ) );
-		images.put( "file h", new Image( display, "doc_h.png" ) );
 		images.put( "file settings", new Image( display, "doc_settings.png" ) );
-		images.put( "file xml", new Image( display, "doc_xml.png" ) );
 		images.put( "file bin", new Image( display, "doc_bin.png" ) );
 		images.put( "file hex", new Image( display, "doc_bin.png" ) );
 		images.put( "file other", new Image( display, "doc_other.png" ) );
 		
-	
-		
+
 		iconExtensions = new ArrayList<String>();
 		iconExtensions.add( "c" );
 		iconExtensions.add( "cpp" );
@@ -99,6 +95,18 @@ public class ProjectTreeMenu {
 		iconExtensions.add( "bin" );
 		iconExtensions.add( "settings" );
 		iconExtensions.add( "txt" );
+		
+		for ( IDEPlugin plugin : PluginManager.listPlugins() ) {
+			for ( String ext : plugin.getSupportedDocumentExtensions() ) {
+				String filename = plugin.getIconFilenameForExtension( ext );
+				if ( filename != null && !images.containsKey( "file " + ext ) ) {
+					images.put( "file " + ext, new Image( display, filename ) );
+					iconExtensions.add( ext );
+				}
+			}
+		}
+	
+		
 		
 		
 		toolBar = new ToolBar( widgetArea, SWT.FLAT | SWT.HORIZONTAL );

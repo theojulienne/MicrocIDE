@@ -4,7 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Image;
 
-
 public class DocumentTab extends CTabItem {
 	private Image unsavedImage;
 	private Image savedImage;
@@ -37,11 +36,12 @@ public class DocumentTab extends CTabItem {
 		}
 		
 		this.setControl( document.getControl( ) );
+		
 	}
 	
 	/**
 	 * Get the IDEDocument this tab displays
-	 * @return the diplayed IDEDocument
+	 * @return the displayed IDEDocument
 	 */
 	public IDEDocument getDocument( ) {
 		return this.document;

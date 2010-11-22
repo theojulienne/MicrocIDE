@@ -36,6 +36,10 @@ public class SourceDocument extends IDEDocument {
 	private SourceViewer sourceView;
 	private FindReplaceDialog frDialog = null;
 
+	public static String[] getAssociatedExtensions( ) {
+		return new String[] { "c", "cpp", "pde", "txt", "xml" };
+	}
+	
 	public SourceDocument( IDocumentParent parent, File file ) {
 		super( parent, file );
 
@@ -129,23 +133,16 @@ public class SourceDocument extends IDEDocument {
 		
 		return success;
 	}
-
+	
 	public boolean close( ) {
-		boolean canProceed = true;
-		
-		if ( !isSaved( ) ) {
-			parent.setSelection( this );
-			parent.getShell( ).setActive( );
-			
-			canProceed = MessageDialog.openConfirm( parent.getShell( ), "Unsaved File", "There are unsaved changes in file: " + file.getName() + "\nDo you want to continue? (Changes will be lost)" );
-		}
+		boolean canProceed = super.close();
 		
 		if ( canProceed ) {
 			if ( this.frDialog != null && !this.frDialog.isDisposed() ) {
 				this.frDialog.close( );
 			}
 		}
-
+		
 		return canProceed;
 	}
 

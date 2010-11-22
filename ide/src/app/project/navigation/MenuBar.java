@@ -81,6 +81,13 @@ public class MenuBar {
 		
 		fileSaveItem.setEnabled( enabled );
 		fileSaveAsItem.setEnabled( enabled );
+		
+		if ( enabled ) {
+			setTabEnabled( enabled );
+		}
+	}
+	
+	public void setTabEnabled( boolean enabled ) {
 		fileCloseTabItem.setEnabled( enabled );
 	}
 	

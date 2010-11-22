@@ -48,15 +48,24 @@ public abstract class IDEDocument {
 	
 	// To implement generic document operations
 	public boolean save( ) {
-		return false;
+		return true;
 	}
 	
 	public boolean saveAs( ) {
-		return false;
+		return true;
 	}
 	
 	public boolean close( ) {
-		return false;
+		boolean canProceed = true;
+		
+		if ( !isSaved( ) ) {
+			parent.setSelection( this );
+			parent.getShell( ).setActive( );
+			
+			canProceed = MessageDialog.openConfirm( parent.getShell( ), "Unsaved File", "There are unsaved changes in file: " + file.getName() + "\nDo you want to continue? (Changes will be lost)" );
+		}
+
+		return canProceed;
 	}
 	
 	public void undo( ) {
@@ -121,7 +130,6 @@ public abstract class IDEDocument {
 	
 	// Implement action to take when this document is selected
 	public void selected( ) {
-		
 	}
 	
 	public Control getControl( ) {
@@ -130,5 +138,9 @@ public abstract class IDEDocument {
 
 	public Control getMainWidget( ) {
 		return getControl( );
+	}
+	
+	public static String[] getAssociatedExtensions( ) {
+		return new String[] { };
 	}
 }

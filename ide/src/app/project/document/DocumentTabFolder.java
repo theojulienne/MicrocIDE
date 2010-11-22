@@ -51,6 +51,10 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 		tabs.remove( tab.getDocument() );
 		documents.remove( tab.getDocument().getFile() );
 		tab.dispose( );
+		
+		if ( this.getItemCount() == 0 ) {
+			project.getMenuBar( ).setTabEnabled( false );
+		}
 	}
 	
 	public boolean closeAllTabs( ) {
@@ -60,6 +64,10 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 				succeeded = false;
 				break;
 			}
+		}
+		
+		if ( succeeded ) {
+			project.getMenuBar( ).setTabEnabled( false );
 		}
 		
 		return succeeded;
@@ -125,6 +133,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 	
 	private void createTab( IDEDocument document ) {
 		tabs.put( document, new DocumentTab( this, document ) );
+		project.getMenuBar( ).setTabEnabled( true );
 	}
 
 	public void updateFiles( ) {
