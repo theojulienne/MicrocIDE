@@ -1,8 +1,14 @@
 package app;
 
-import org.eclipse.swt.widgets.*;
+import java.io.File;
 
-import app.dialogs.PreferencesDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import app.dialogs.AppSettingsDialog;
+import app.plugin.PluginManager;
 import app.project.ProjectWindow;
 
 public class Application {
@@ -11,17 +17,23 @@ public class Application {
 	public static String appName = "MicrocIDE";
 	public static String version = "0.1 Alpha Release";
 	public static String aboutString = appName + " " + version + "\n" + "IDE for embedded development\n2010 Icy Labs http://www.icy.com.au/";
-	public static String projectFileName = "project.settings";
-	public static String ideProjectPreferenceFile = "project_settings.json";
+	
+	public static String projectSettingsFileName = "project.settings";
+	public static String appSettingsFileName     = "app.settings";
 	
 	private static Application instance = null;
 	
-	private Preferences preferences;
+	private Preferences preferences = null;
 	private static Display display;
-	private PreferencesDialog prefDialog; 
+	private AppSettingsDialog prefDialog; 
 	
-	private ImageManager imageManager;
+	private ImageManager imageManager = null;
+	private PluginManager pluginManager = null;
 
+	/**
+	 * Is this application running on a Mac?
+	 * @return true if os.name == "Mac OS X"
+	 */
 	public static boolean isMac( ) {
         if ( System.getProperty( "os.name" ).equals( "Mac OS X" ) ) {
             return true;
@@ -29,24 +41,48 @@ public class Application {
         return false;
     }
 	
+	/**
+	 * Creates and shows a preferences dialog for the application
+	 */
 	public void showPreferences( ) {
 		if ( prefDialog == null ) {
-			prefDialog = new PreferencesDialog( display.getActiveShell() );
+			prefDialog = new AppSettingsDialog( display.getActiveShell() );
 		}
 		
 		prefDialog.open( );
 	}
 	
+	/**
+	 * Returns the ImageManager for this application
+	 * @return an ImageManager
+	 */
 	public ImageManager getImageManager( ) {
 		return imageManager;
 	}
 	
 	private Application( ) {
-		
+		boolean showPrefs = false;
 		preferences = new Preferences( display );
-		imageManager = new ImageManager( display );
+		try {
+			pluginManager = new PluginManager( );
+		} catch ( JSONException e ) {
+			PluginManager.savePluginJSON( "Application", new File( Application.appSettingsFileName ), PluginManager.getFreshAppSettings( ) );
+			try {
+				pluginManager = new PluginManager( );
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			showPrefs = true;
+		}
+		imageManager = new ImageManager( display, pluginManager );
 		instance = this;
 		
+		if ( showPrefs ) {
+			MessageDialog.openInformation( display.getActiveShell(), "Application Settings",
+					"The application's settings and loaded extensions need to be reviewed." );
+		}
 	}
 	
 	public static Application getInstance( ) {
@@ -98,5 +134,9 @@ public class Application {
 		}
 		
 		display.dispose( );
+	}
+
+	public PluginManager getPluginManager() {
+		return pluginManager;
 	}
 }

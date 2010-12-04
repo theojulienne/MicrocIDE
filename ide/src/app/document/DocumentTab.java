@@ -4,15 +4,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Image;
 
-import app.plugin.base.IDEDocument;
+import app.plugin.base.PluginDocument;
 
 public class DocumentTab extends CTabItem {
 	private Image unsavedImage;
 	private Image savedImage;
-	private IDEDocument document;
+	private PluginDocument document;
 	private DocumentTabFolder parent;
 	
-	public DocumentTab( DocumentTabFolder parent, IDEDocument document ) {
+	/**
+	 * Constructor for DocumentTab
+	 * @param parent The parent DocumentTabFolder which holds this tab
+	 * @param document The IDEDocument which this document houses
+	 */
+	public DocumentTab( DocumentTabFolder parent, PluginDocument document ) {
 		super( parent, SWT.BORDER );
 		
 		this.parent = parent;
@@ -26,7 +31,7 @@ public class DocumentTab extends CTabItem {
 	 * Set the IDEDocument to display in this DocumentTab
 	 * @param document The IDEDocument this tab displays
 	 */
-	public void setDocument( IDEDocument document ) {
+	public void setDocument( PluginDocument document ) {
 		this.document = document;
 		
 		this.setText( document.getFile().getName() );
@@ -45,7 +50,7 @@ public class DocumentTab extends CTabItem {
 	 * Get the IDEDocument this tab displays
 	 * @return the displayed IDEDocument
 	 */
-	public IDEDocument getDocument( ) {
+	public PluginDocument getDocument( ) {
 		return this.document;
 	}
 	

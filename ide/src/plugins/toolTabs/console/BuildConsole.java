@@ -1,5 +1,7 @@
 package plugins.toolTabs.console;
 
+// TODO: move build settings over to plugin
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -21,17 +23,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import plugins.toolTabs.serial.SerialTerminal;
+
 import common.FileIO;
 
 
 
 import app.Application;
-import app.plugin.base.IDETool;
+import app.plugin.base.PluginTool;
 import app.plugin.interfaces.IMenuBar;
 import app.plugin.interfaces.IToolBar;
-import app.plugin.interfaces.IToolTabParent;
+import app.plugin.interfaces.parents.IToolParent;
 
-public class BuildConsole extends IDETool {
+public class BuildConsole extends PluginTool {
 
 	private static final int BUILD  = 1;
 	private static final int DEPLOY = 2;
@@ -59,10 +63,10 @@ public class BuildConsole extends IDETool {
 	private MenuItem buildMenuItem;
 	private MenuItem deployMenuItem;
 	
-	private IToolTabParent parent;
+	private IToolParent parent;
 	
 	
-	public BuildConsole( IToolTabParent parent ) {
+	public BuildConsole( IToolParent parent ) {
 		this.parent = parent;
 		
 		ranges = new ArrayList<StyleRange>( );
@@ -247,7 +251,7 @@ public class BuildConsole extends IDETool {
 	private JSONObject getProjectSettings() {
 		String settings;
 		JSONObject jsonSettings;
-		File settingsFile = new File( parent.getProjectPath(), Application.projectFileName );
+		File settingsFile = new File( parent.getProjectPath(), Application.projectSettingsFileName );
 		if ( settingsFile.canRead() ) {
 			settings = FileIO.readFile( settingsFile );
 			try {
@@ -291,11 +295,18 @@ public class BuildConsole extends IDETool {
 	
 	
 	public void deploy( ) {
-		/* TODO: inter-plugin communication
-		if ( serialTerminal.shouldDisconnectBeforeDeployment() ) {
-			serialTerminal.disconnect();
+		
+		SerialTerminal terminal = null;
+		for ( PluginTool tool : parent.getTools() ) {
+			if ( tool instanceof SerialTerminal ) {
+				terminal = (SerialTerminal)tool;
+			}
 		}
-		*/
+		if ( terminal != null ) {
+			if ( terminal.shouldDisconnectBeforeDeployment() ) {
+				terminal.disconnect();
+			}
+		}
 		
 		JSONObject settings = getProjectSettings( );
 		

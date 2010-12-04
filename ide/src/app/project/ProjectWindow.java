@@ -237,7 +237,7 @@ public class ProjectWindow {
 			if ( path != null ) {
 				boolean hasProjectFile = false;
 				for ( File file : path.listFiles() ) {
-					if ( file.getName().equals( Application.projectFileName ) ) {
+					if ( file.getName().equals( Application.projectSettingsFileName ) ) {
 						hasProjectFile = true;
 						break;
 					}
@@ -306,7 +306,7 @@ public class ProjectWindow {
 	}
 	
 	public void openProjectSettings( File projectPath ) {
-		ProjectSettingsDialog settingsDialog = new ProjectSettingsDialog( shell, projectPath );
+		ProjectSettingsDialog settingsDialog = new ProjectSettingsDialog( shell, this );
 		settingsDialog.open( );
 	}
 	
@@ -332,7 +332,7 @@ public class ProjectWindow {
 	}
 	
 	public void openDocument( File fileToOpen ) {
-		if ( fileToOpen.getName().equals( Application.projectFileName ) ) {
+		if ( fileToOpen.getName().equals( Application.projectSettingsFileName ) ) {
 			
 			boolean openPrefs = MessageDialog.openQuestion( shell, "Opening Settings", "This is a project settings file.\nDo you want to open the settings dialog instead?" );
 			if ( openPrefs ) {

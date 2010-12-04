@@ -29,10 +29,10 @@ import common.FileIO;
 
 
 import app.Application;
-import app.plugin.base.IDEDocument;
-import app.plugin.interfaces.IDocumentParent;
+import app.plugin.base.PluginDocument;
+import app.plugin.interfaces.parents.IDocumentParent;
 
-public class SourceDocument extends IDEDocument {
+public class SourceDocument extends PluginDocument {
 	
 	private Document document;
 	private SourceViewer sourceView;

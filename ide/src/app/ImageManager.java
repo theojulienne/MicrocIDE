@@ -13,7 +13,7 @@ public class ImageManager {
 	private HashMap<String, Image> fileIconIndex;
 	private Display display;
 
-	public ImageManager( Display display ) {
+	public ImageManager( Display display, PluginManager plugins ) {
 		this.display = display;
 		this.imageIndex = new HashMap<String, Image>( );
 		this.fileIconIndex = new HashMap<String, Image>( );
@@ -25,7 +25,7 @@ public class ImageManager {
 		addIconForExtension( "bin", "doc_bin.png" );
 		addIconForExtension( "hex", "doc_bin.png" );
 		
-		for ( IPlugin plugin : PluginManager.listPlugins() ) {
+		for ( IPlugin plugin : plugins.listLoadedPlugins() ) {
 			if ( plugin.getSupportedDocumentExtensions() != null ) {
 				for ( String ext : plugin.getSupportedDocumentExtensions() ) {
 					String filename = plugin.getIconFilenameForExtension( ext );

@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import app.plugin.base.IDEDocument;
-import app.plugin.interfaces.IDocumentParent;
+import app.plugin.base.PluginDocument;
+import app.plugin.interfaces.parents.IDocumentParent;
 
-public class ImageDocument extends IDEDocument {
+public class ImageDocument extends PluginDocument {
 
 	private Image image;
 	private Canvas canvas;

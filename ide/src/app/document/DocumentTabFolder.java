@@ -9,23 +9,27 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Listener;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.json.JSONObject;
 
-import app.plugin.base.IDEDocument;
-import app.plugin.interfaces.IDocumentParent;
+import app.Application;
+import app.plugin.PluginManager;
+import app.plugin.base.PluginDocument;
+import app.plugin.interfaces.IPlugin;
+import app.plugin.interfaces.parents.IDocumentParent;
 import app.project.ProjectWindow;
 
 public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 
-	private HashMap<File, IDEDocument> documents;
-	private HashMap<IDEDocument, DocumentTab> tabs;
+	private HashMap<File, PluginDocument> documents;
+	private HashMap<PluginDocument, DocumentTab> tabs;
 	private ProjectWindow project;
 	private DocumentFactory documentFactory;
 	
 	public DocumentTabFolder( Composite parent, int style ) {
 		super( parent, style );
 		
-		this.documents = new HashMap<File, IDEDocument>( );
-		this.tabs = new HashMap<IDEDocument, DocumentTab>( );
+		this.documents = new HashMap<File, PluginDocument>( );
+		this.tabs = new HashMap<PluginDocument, DocumentTab>( );
 		
 		this.setBorderVisible( true );
 		
@@ -69,7 +73,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 	
 	public void renameDocumentTab( File fromFile, File toFile ) {
 		if ( documents.containsKey( fromFile ) ) {
-			IDEDocument doc = documents.get( fromFile );
+			PluginDocument doc = documents.get( fromFile );
 			doc.rename( toFile );
 		}
 	}
@@ -116,7 +120,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 		this.project = project;
 	}
 
-	public void setSelection( IDEDocument ideDocument ) {
+	public void setSelection( PluginDocument ideDocument ) {
 		if ( tabs.containsKey( ideDocument ) ) {
 			DocumentTab tabItem = tabs.get( ideDocument );
 			this.setSelection( tabItem );
@@ -127,7 +131,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 		return this;
 	}
 
-	public void setDocumentSaved( IDEDocument ideDocument, boolean isSaved ) {
+	public void setDocumentSaved( PluginDocument ideDocument, boolean isSaved ) {
 		if ( tabs.containsKey( ideDocument ) ) {
 			DocumentTab tabItem = tabs.get( ideDocument );
 			if ( isSaved ) {
@@ -144,7 +148,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 
 	public void openDocument( File documentFile ) {
 		
-		IDEDocument document;
+		PluginDocument document;
 		if ( documents.containsKey( documentFile ) ) {
 			document = documents.get( documentFile );
 		} else {
@@ -159,7 +163,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 		document.setFocus( );
 	}
 	
-	private void createTab( IDEDocument document ) {
+	private void createTab( PluginDocument document ) {
 		tabs.put( document, new DocumentTab( this, document ) );
 		project.getMenuBar( ).setTabEnabled( true );
 	}
@@ -168,7 +172,7 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 		project.updateTree( );
 	}
 
-	public void setDocumentFile( IDEDocument ideDocument, File file ) {
+	public void setDocumentFile( PluginDocument ideDocument, File file ) {
 		if ( tabs.containsKey( ideDocument ) ) {
 			
 			// change the new file to map to the open document
@@ -184,4 +188,12 @@ public class DocumentTabFolder extends CTabFolder implements IDocumentParent {
 		project.setDocumentEnabled( enabled );
 	}
 
+	public JSONObject getPluginProjectSettings( IPlugin plugin ) {
+		return PluginManager.getPluginProjectSettings( project.getPath(), plugin );
+	}
+
+	public JSONObject getPluginAppSettings(IPlugin plugin) {
+		return PluginManager.getPluginAppSettings( plugin );
+	}
+	
 }
