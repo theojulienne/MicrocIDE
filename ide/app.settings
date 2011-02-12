@@ -1,0 +1,160 @@
+{
+   "Application": {
+      "Enabled Plugins": [
+         "Source Editor",
+         "Build Console",
+         "Image Document",
+         "Serial Terminal"
+      ],
+      "Recent List": [
+         "/Users/dave/Development/penguino-projects/test",
+         "/Users/dave/Development/penguino-projects/lcd",
+         "/Users/dave/Desktop/untitled folder/Example Project"
+      ],
+      "Show Recent List": true,
+      "Single Click to Open": true,
+      "Toolbar Placement": "Left"
+   },
+   "Build Console": {
+      "Console Font": {
+         "Font Face": "Monaco",
+         "Font Size": 12
+      },
+      "Presets": {
+         "Custom": {
+            "Build": ["echo \"build me here\""],
+            "Deploy": ["echo \"deploy me here\""]
+         },
+         "Penguino AVR": {
+            "Build": ["avr-gcc -Wall -Os -DF_CPU=16000000 -mmcu=atmega32 -std=gnu99 -o firmware.elf *.c"],
+            "Deploy": [
+               "avr-gcc -Wall -Os -DF_CPU=16000000 -mmcu=atmega32 -std=gnu99 -o firmware.elf *.c",
+               "avr-objcopy -j .text -j .data -O binary firmware.elf firmware.bin",
+               "flip firmware.bin"
+            ]
+         }
+      }
+   },
+   "Source Editor": {
+      "Editor Font": {
+         "Font Face": "Monaco",
+         "Font Size": 12
+      },
+      "Syntax Highlighting": {
+         "All Caps": {
+            "B": 84,
+            "Bold": true,
+            "G": 84,
+            "R": 84
+         },
+         "Character Literal": {
+            "B": 64,
+            "Bold": false,
+            "G": 196,
+            "R": 64
+         },
+         "Comment": {
+            "B": 128,
+            "Bold": false,
+            "G": 128,
+            "R": 128
+         },
+         "Default Text": {
+            "B": 0,
+            "Bold": false,
+            "G": 0,
+            "R": 0
+         },
+         "Directive": {
+            "B": 0,
+            "Bold": true,
+            "G": 84,
+            "R": 0
+         },
+         "Directive Angle Bracketed": {
+            "B": 32,
+            "Bold": false,
+            "G": 128,
+            "R": 32
+         },
+         "Directive String": {
+            "B": 64,
+            "Bold": false,
+            "G": 128,
+            "R": 64
+         },
+         "Directive Text": {
+            "B": 64,
+            "Bold": false,
+            "G": 84,
+            "R": 64
+         },
+         "Doc Comment": {
+            "B": 196,
+            "Bold": false,
+            "G": 128,
+            "R": 128
+         },
+         "Grouping": {
+            "B": 64,
+            "Bold": false,
+            "G": 128,
+            "R": 64
+         },
+         "Identifier": {
+            "B": 0,
+            "Bold": false,
+            "G": 0,
+            "R": 0
+         },
+         "Keyword": {
+            "B": 255,
+            "Bold": true,
+            "G": 60,
+            "R": 20
+         },
+         "Number": {
+            "B": 192,
+            "Bold": false,
+            "G": 0,
+            "R": 0
+         },
+         "Operator": {
+            "B": 0,
+            "Bold": false,
+            "G": 0,
+            "R": 196
+         },
+         "Primitive Type": {
+            "B": 192,
+            "Bold": true,
+            "G": 0,
+            "R": 84
+         },
+         "String Escaped": {
+            "B": 63,
+            "Bold": true,
+            "G": 63,
+            "R": 127
+         },
+         "String Formatting": {
+            "B": 63,
+            "Bold": true,
+            "G": 63,
+            "R": 212
+         },
+         "String Literal": {
+            "B": 32,
+            "Bold": false,
+            "G": 120,
+            "R": 32
+         },
+         "Type Qualifier": {
+            "B": 255,
+            "Bold": false,
+            "G": 100,
+            "R": 100
+         }
+      }
+   }
+}
