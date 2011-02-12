@@ -115,12 +115,6 @@ public class CAutoIndentStrategy implements IAutoEditStrategy {
 		return end;
    }
 
-    private void configureCommand( DocumentCommand command ) {
-        //puts the caret between both the quotes
-        command.caretOffset = command.offset + 1;
-        command.shiftsCaret = false;
-    }
-    
     public static String getIndentOfLine( IDocument document, int line )
 	    throws BadLocationException {
     	
