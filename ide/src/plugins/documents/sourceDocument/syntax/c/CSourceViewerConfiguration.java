@@ -1,5 +1,7 @@
 package plugins.documents.sourceDocument.syntax.c;
 
+import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 /*
 import org.eclipse.jface.text.ITextHover;
@@ -48,7 +50,14 @@ public class CSourceViewerConfiguration extends SourceViewerConfiguration {
 		
 		return pr;
 	}
-	 
+	
+	@Override
+	public IAutoEditStrategy[] getAutoEditStrategies(
+			ISourceViewer sourceViewer, String contentType) {
+		IAutoEditStrategy strategy = new CAutoIndentStrategy();//new DefaultIndentLineAutoEditStrategy();
+		return new IAutoEditStrategy[] { strategy };
+	}
+	
 	// autocomplete:
 	/*
 	IContentAssistant getContentAssistant( ISourceViewer sv ) {
