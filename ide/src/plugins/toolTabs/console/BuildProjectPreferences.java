@@ -271,7 +271,7 @@ public class BuildProjectPreferences extends PluginProjectPreferences {
 		
 		Button saveButton = new Button( commandsArea, SWT.PUSH );
 		saveButton.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, false, false ) );
-		saveButton.setText( "Apply and Save" );
+		saveButton.setText( "Apply and Close" );
 		saveButton.addSelectionListener( new SelectionListener() {
 			public void widgetSelected( SelectionEvent evt ) {
 				saveSettings( );

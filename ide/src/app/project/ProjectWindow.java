@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import app.Application;
 import app.dialogs.AppSettingsDialog;
 import app.dialogs.ProjectSettingsDialog;
+import app.dialogs.TemplateChooserDialog;
 
 import app.plugin.PluginManager;
 import app.plugin.interfaces.IToolBar;
@@ -359,7 +360,9 @@ public class ProjectWindow {
 			if ( parentDir != null ) {
 				File parentPath = new File( parentDir );
 				if ( parentPath.mkdir( ) ) {
-					openProjectSettings( parentPath );
+					//openProjectSettings( parentPath );
+					openTemplateChooser( parentPath );
+					
 					projectMenu.setPath( parentPath );
 					
 				} else {
@@ -376,6 +379,12 @@ public class ProjectWindow {
 	public void openProjectSettings( File projectPath ) {
 		ProjectSettingsDialog settingsDialog = new ProjectSettingsDialog( shell, projectPath );
 		settingsDialog.open( );
+	}
+	
+
+	public void openTemplateChooser( File projectPath ) {
+		TemplateChooserDialog templateDialog = new TemplateChooserDialog( shell, projectPath );
+		templateDialog.open( );
 	}
 	
 	public void find( ) {

@@ -27,6 +27,8 @@ public interface IPlugin {
 	boolean hasProjectPreferences( );
 	// returns true iff this plugin has an application preferences pane
 	boolean hasAppPreferences( );
+	// returns true iff this plugin has presets for a template
+	boolean hasTemplatePresets( );
 	
 	// creates a document if hasDocument( ); returns true, else returns null
 	PluginDocument createDocument( IDocumentParent parent, File file );
@@ -36,4 +38,7 @@ public interface IPlugin {
 	PluginProjectPreferences createProjectPreferences( IPreferencesParent parent );
 	// creates an application preferences pane
 	PluginAppPreferences createAppPreferences( IPreferencesParent parent );
+	
+	// given a template name, applies its project settings to the open project
+	void applyProjectTemplateSettings( String templateName, IPreferencesParent parent );
 }
