@@ -19,6 +19,10 @@ public class TopToolbar implements IToolBar {
 		
 	}
 	
+	public TopToolbar(ToolBar nativeToolBar) {
+		toolBarWidget = nativeToolBar;
+	}
+
 	public ToolBar getWidget( ) {
 		return toolBarWidget;
 	}

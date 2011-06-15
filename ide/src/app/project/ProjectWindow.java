@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +77,7 @@ public class ProjectWindow {
 		
 		// create new window
 		shell = new Shell( display );
-
+		
 		shell.setImage( new Image( shell.getDisplay(), "icon.png" ) );
 
 		// window title
@@ -122,6 +123,7 @@ public class ProjectWindow {
 	}
 	
 	private void layoutToolbar( ) {
+		/*
 		JSONObject appSettings = PluginManager.getAppInstanceSettings( );
 		int toolBarPos = SWT.LEFT;
 		if ( appSettings.has( AppSettingsDialog.TOOLBAR ) ) { 
@@ -141,20 +143,29 @@ public class ProjectWindow {
 
 		topBar.setLayoutData( new GridData( toolBarPos, SWT.CENTER, true, false ) );
 		topBar.getWidget().getParent().layout();
+		*/
 	}
 	
 	private void createUI( File projectDir ) {
 		
-		shell.setLayout( new FillLayout( ) );
+		shell.setLayout( new GridLayout( ) );
 		
 		menuBar = new MenuBar( shell, this );
 		
 		Composite windowContainer = new Composite( shell, SWT.NONE );
-		windowContainer.setLayout( new GridLayout( 2, false ) );
+		windowContainer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+		windowContainer.setLayout( new GridLayout( 1, false ) );
 		
-		topBar = new TopToolbar( windowContainer, SWT.FLAT | SWT.HORIZONTAL );
+		ToolBar nativeToolBar = shell.getToolBar();
+		GridData toolbarData = new GridData(  );
+		toolbarData.exclude = true;
+		nativeToolBar.setLayoutData( toolbarData );
+		
+		//topBar = new TopToolbar( windowContainer, SWT.FLAT | SWT.HORIZONTAL );
+		topBar = new TopToolbar( nativeToolBar );
 		layoutToolbar( );
 		
+		/*
 		pathLabel = new Label( windowContainer, SWT.CENTER );
 		GridData pathData = new GridData( SWT.LEFT, SWT.CENTER, false, false );
 		pathData.widthHint = 200;
@@ -162,9 +173,10 @@ public class ProjectWindow {
 		Font font = pathLabel.getFont();
 		
 		pathLabel.setFont( new Font( shell.getDisplay(), font.getFontData()[0].getName(), 14, SWT.BOLD ) );
+		*/
 		
 		GridData sashGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		sashGridData.horizontalSpan = 2;
+		//sashGridData.horizontalSpan = 2;
 		SashForm sashForm = new SashForm( windowContainer, SWT.VERTICAL );
 		sashForm.setLayoutData( sashGridData );
 		
@@ -184,7 +196,7 @@ public class ProjectWindow {
 		sashForm.setWeights( new int[]{ 7, 3 } );
 		
 		Label statusBar = new Label( windowContainer, SWT.NONE );
-		statusBar.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 1, 1 ) );
+		statusBar.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 		statusBar.setAlignment( SWT.LEFT );
 		
 		projectMenu.setStatusWidget( statusBar );

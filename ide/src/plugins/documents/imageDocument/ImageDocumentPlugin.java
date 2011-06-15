@@ -59,13 +59,11 @@ public class ImageDocumentPlugin implements IPlugin {
 		return false;
 	}
 
-	@Override
 	public boolean hasTemplatePresets( ) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public void applyProjectTemplateSettings( String templateName,
 			IPreferencesParent parent ) {
 		// TODO Auto-generated method stub

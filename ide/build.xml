@@ -1,0 +1,43 @@
+<project name="MicrocIDE" default="dist" basedir=".">
+	<!-- set global properties for this build -->
+	<property name="src" location="src"/>
+	<property name="build" location="build"/>
+	<property name="dist" location="dist"/>
+	
+	<property name="libs" location="lib/osx/swt.jar:lib/osx/org.eclipse.jface_3.3.2.M20080207-0800.jar:lib/osx/org.eclipse.jface.text_3.3.2.r332_20071017-0800.jar:lib/osx/org.eclipse.osgi_3.3.2.R33x_v20080105.jar:lib/osx/org.eclipse.core.runtime_3.3.100.v20070530.jar:lib/osx/org.eclipse.text_3.3.0.v20070606-0010.jar:lib/osx/org.eclipse.equinox.common_3.3.0.v20070426.jar:lib/osx/org.eclipse.core.commands_3.3.0.I20070605-0010.jar:lib/osx/org.eclipse.swt_3.3.2.v3349d.jar:serial/RXTXcomm.jar" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp/>
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" includeantruntime="false" classpath="${libs}" />
+	</target>
+	
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}"/>
+		
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}"/>
+			<attribute name="Main-Class" value="app.Application"/>
+		</manifest>
+		
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/MicrocIDE.jar" basedir="${build}" manifest="MANIFEST.MF" />
+	</target>
+	
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+	
+	<target name="run" depends="dist">
+		<java jar="${dist}/MicrocIDE.jar" fork="true" classpath="${libs}" />
+	</target>
+</project>

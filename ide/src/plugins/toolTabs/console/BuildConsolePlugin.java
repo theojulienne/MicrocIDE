@@ -66,7 +66,6 @@ public class BuildConsolePlugin implements IPlugin {
 		return true;
 	}
 
-	@Override
 	public void applyProjectTemplateSettings( String templateName,
 			IPreferencesParent parent ) {
 		

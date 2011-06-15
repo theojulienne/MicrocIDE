@@ -73,13 +73,11 @@ public class SourceDocumentPlugin implements IPlugin {
 		return true;
 	}
 
-	@Override
 	public boolean hasTemplatePresets( ) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public void applyProjectTemplateSettings( String templateName,
 			IPreferencesParent parent ) {
 		// TODO Auto-generated method stub
